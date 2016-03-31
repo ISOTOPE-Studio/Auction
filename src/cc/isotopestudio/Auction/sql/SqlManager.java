@@ -22,16 +22,46 @@ public class SqlManager {
 		} catch (SQLException e) {
 			plugin.getLogger().info(Auction.pluginName + "数据库出错 Error2");
 			return false;
-		}		
-		Statement statement = null;
+		}
 		try {
-			statement = Auction.c.createStatement();
+			Auction.statement = Auction.c.createStatement();
 		} catch (SQLException e1) {
 			plugin.getLogger().info(Auction.pluginName + "数据库出错 Error3");
 			return false;
 		}
 		// PlayerData.statement = statement;
-		
+
+		return true;
+	}
+
+	public static boolean createTables(Auction plugin) {
+		try {
+			Auction.statement.executeUpdate(
+					"create table if not exists market(" +
+					"	 id int unsigned not null auto_increment primary key," +
+					"	 time timestamp not null," +
+					"	 money int not null," +
+					"	 owner tinytext not null," +
+					"	 itemid int not null," +
+					"	 amount int not null," +
+					"	 name tinytext," +
+					"	 lore text," +
+					"	 enchant text" +
+					"	 );");
+			Auction.statement.executeUpdate(
+					"create table if not exists mail(" +
+					" id int unsigned not null auto_increment primary key," +
+					" owner tinytext not null," +
+					" itemid int not null," +
+					" amount int not null," +
+					" name tinytext," +
+					" lore text," +
+					" enchant text" +
+					" );");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 

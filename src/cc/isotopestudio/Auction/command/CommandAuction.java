@@ -11,7 +11,7 @@ import cc.isotopestudio.Auction.Auction;
 public class CommandAuction implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("quest")) {
+		if (cmd.getName().equalsIgnoreCase("auction")) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(
 						new StringBuilder(Auction.prefix).append(ChatColor.RED).append("必须要玩家才能执行").toString());

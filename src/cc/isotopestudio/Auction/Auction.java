@@ -2,6 +2,7 @@ package cc.isotopestudio.Auction;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.Statement;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
@@ -18,9 +19,9 @@ public class Auction extends JavaPlugin {
 	// mySQL
 	public static MySQL MySQL;
 	public static Connection c;
+	public static Statement statement;
 
 	public void createFile(String name) {
-
 		File file;
 		file = new File(getDataFolder(), name + ".yml");
 		if (!file.exists()) {
@@ -36,6 +37,11 @@ public class Auction extends JavaPlugin {
 		if (SqlManager.connectMySQL(this) == false) {
 			getLogger().info(pluginName + "无法加载!");
 			getLogger().info(pluginName + "数据库无法连接！");
+			this.getPluginLoader().disablePlugin(this);
+		}
+		if (SqlManager.createTables(this) == false) {
+			getLogger().info(pluginName + "无法加载!");
+			getLogger().info(pluginName + "数据库创建失败！");
 			this.getPluginLoader().disablePlugin(this);
 		}
 		PluginManager pm = this.getServer().getPluginManager();
