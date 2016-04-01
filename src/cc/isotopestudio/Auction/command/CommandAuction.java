@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import cc.isotopestudio.Auction.Auction;
+import cc.isotopestudio.Auction.data.Data;
+import cc.isotopestudio.Auction.handler.DataActionType;
 
 public class CommandAuction implements CommandExecutor {
 	@Override
@@ -19,11 +21,21 @@ public class CommandAuction implements CommandExecutor {
 			}
 			Player player = (Player) sender;
 			if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
-				
+				if (args[0].equalsIgnoreCase("market")) {
+					Data.storeItem(player, player.getItemInHand(), 100, DataActionType.INTOMARKET);
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("mail")) {
+					
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("shelf")) {
+					
+					return true;
+				}
 				return true;
 			} else {
-				player.sendMessage(
-						new StringBuilder(Auction.prefix).append(ChatColor.GREEN).append("帮助菜单").toString());
+				player.sendMessage(new StringBuilder(Auction.prefix).append(ChatColor.GREEN).append("帮助菜单").toString());
 				sender.sendMessage(
 						new StringBuilder().append(ChatColor.GREEN).append("/auction market 查看拍卖行").toString());
 				sender.sendMessage(
@@ -32,6 +44,9 @@ public class CommandAuction implements CommandExecutor {
 						new StringBuilder().append(ChatColor.GREEN).append("/auction shelf 查看玩家上架的商品").toString());
 				return true;
 			}
+		}
+		if (cmd.getName().equalsIgnoreCase("market")) {
+			
 		}
 		return false;
 	}

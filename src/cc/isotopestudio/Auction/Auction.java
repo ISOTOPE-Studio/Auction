@@ -9,6 +9,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import cc.isotopestudio.Auction.sql.SqlManager;
+import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.sql.MySQL;
 
 public class Auction extends JavaPlugin {
@@ -48,7 +49,8 @@ public class Auction extends JavaPlugin {
 		
 		// pm.registerEvents(new WorldListener(this), this);
 
-		// this.getCommand("LimitedWorld").setExecutor(new ReloadCommand(this));
+		this.getCommand("auction").setExecutor(new CommandAuction());
+		this.getCommand("market").setExecutor(new CommandAuction());
 
 		getLogger().info(pluginName + "成功加载!");
 		getLogger().info(pluginName + "由ISOTOPE Studio制作!");

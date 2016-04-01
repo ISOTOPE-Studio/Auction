@@ -41,8 +41,8 @@ public class SqlManager {
 					"	 id int unsigned not null auto_increment primary key," +
 					"	 time timestamp not null," +
 					"	 money int not null," +
-					"	 owner tinytext not null," +
-					"	 itemid int not null," +
+					"	 owner text not null," +
+					"	 itemid text not null," +
 					"	 amount int not null," +
 					"	 name tinytext," +
 					"	 lore text," +
@@ -51,10 +51,10 @@ public class SqlManager {
 			Auction.statement.executeUpdate(
 					"create table if not exists mail(" +
 					" id int unsigned not null auto_increment primary key," +
-					" owner tinytext not null," +
-					" itemid int not null," +
+					" owner text not null," +
+					" itemid text not null," +
 					" amount int not null," +
-					" name tinytext," +
+					" name text," +
 					" lore text," +
 					" enchant text" +
 					" );");
