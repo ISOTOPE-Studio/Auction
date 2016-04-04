@@ -1,11 +1,8 @@
 package cc.isotopestudio.Auction.gui;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,22 +19,19 @@ public abstract class GUI implements Listener {
 
 	// From: https://bukkit.org/threads/icon-menu.108342
 
-	private String name;
-	private int size;
-	private int lorePos;
-	private Plugin plugin;
-	private String[] optionNames;
-	private ItemStack[] optionIcons;
-	private boolean ifFinished;
+	protected String name;
+	protected int size;
+	protected OptionClickEventHandler[] handler;
+	protected Plugin plugin;
+	protected String[] optionNames;
+	protected ItemStack[] optionIcons;
 
-	public GUI(String name, int size, int lorePos, Plugin plugin) {
+	public GUI(String name, int size, Plugin plugin) {
 		this.name = name;
 		this.size = size;
-		this.lorePos = lorePos;
 		this.plugin = plugin;
 		this.optionNames = new String[size];
 		this.optionIcons = new ItemStack[size];
-		ifFinished = false;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
@@ -59,33 +53,44 @@ public abstract class GUI implements Listener {
 
 	public void Destory() {
 		HandlerList.unregisterAll(this);
+		handler = null;
 		plugin = null;
 		optionNames = null;
 		optionIcons = null;
 	}
 
+	public void setHandlerList(OptionClickEventHandler[] handler) {
+		this.handler = handler;
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
-	void onInventoryClick(final InventoryClickEvent event) {
+	public void onInventoryClick(final InventoryClickEvent event) {
 		if (event.getInventory().getTitle().equals(name)) {
-			int size = event.getRawSlot();
-			int pos = event.getSlot();
-			try {
-				if (!(event.getCurrentItem().getType().equals(Material.EMERALD)
-						&& event.getCursor().getType().equals(Material.AIR)
-						|| event.getCursor().getType().equals(Material.EMERALD)
-								&& event.getCurrentItem().getType().equals(Material.AIR))) {
-					event.setCancelled(true);
-					return;
-				}
-			} catch (Exception e) {
-				event.setCancelled(true);
+			event.setCancelled(true);
+			int slot = event.getRawSlot();
+			if (slot < 0 || slot >= size) {
 				return;
 			}
+			System.out.println(event.getInventory().getTitle());
+			/*
+			if (handler[slot] != null && optionNames[slot] != null) {
+				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
+				handler[slot].onOptionClick(e);
+				if (e.willClose()) {
+					final Player p = (Player) event.getWhoClicked();
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+						public void run() {
+							p.closeInventory();
+						}
+					}, 1);
+				}
+			}
+			*/
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	void onInventoryClose(InventoryCloseEvent event) {
+	public void onInventoryClose(InventoryCloseEvent event) {
 		if (event.getInventory().getTitle().equals(name)) {
 			Destory();
 		}
@@ -97,5 +102,53 @@ public abstract class GUI implements Listener {
 		im.setLore(Arrays.asList(lore));
 		item.setItemMeta(im);
 		return item;
+	}
+
+	public interface OptionClickEventHandler {
+		public void onOptionClick(OptionClickEvent event);
+	}
+
+	public class OptionClickEvent {
+		private Player player;
+		private int position;
+		private String name;
+		private boolean close;
+		private boolean destroy;
+
+		public OptionClickEvent(Player player, int position, String name) {
+			this.player = player;
+			this.position = position;
+			this.name = name;
+			this.close = true;
+			this.destroy = false;
+		}
+
+		public Player getPlayer() {
+			return player;
+		}
+
+		public int getPosition() {
+			return position;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public boolean willClose() {
+			return close;
+		}
+
+		public boolean willDestroy() {
+			return destroy;
+		}
+
+		public void setWillClose(boolean close) {
+			this.close = close;
+		}
+
+		public void setWillDestroy(boolean destroy) {
+			this.destroy = destroy;
+		}
 	}
 }

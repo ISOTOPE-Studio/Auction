@@ -8,9 +8,18 @@ import org.bukkit.entity.Player;
 
 import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.data.Data;
-import cc.isotopestudio.Auction.handler.DataActionType;
+import cc.isotopestudio.Auction.gui.MailGUI;
+import cc.isotopestudio.Auction.gui.MarketGUI;
+import cc.isotopestudio.Auction.gui.ShelfGUI;
+import cc.isotopestudio.Auction.handler.DataLocationType;
 
 public class CommandAuction implements CommandExecutor {
+	private final Auction plugin;
+
+	public CommandAuction(Auction plugin) {
+		this.plugin = plugin;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("auction")) {
@@ -22,15 +31,18 @@ public class CommandAuction implements CommandExecutor {
 			Player player = (Player) sender;
 			if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
 				if (args[0].equalsIgnoreCase("market")) {
-					Data.storeItem(player, player.getItemInHand(), 100, DataActionType.INTOMARKET);
+					Data.storeItemIntoMarket(player, player.getItemInHand(), 100);
+					(new MarketGUI(0, plugin)).open(player);
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("mail")) {
-					
+					Data.storeItemIntoMail(player, player.getItemInHand());
+					(new MailGUI(player, 0, plugin)).open(player);
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("shelf")) {
-					
+					(new ShelfGUI(player, 0, plugin)).open(player);
+					player.setItemInHand(Data.getItem(Integer.parseInt(args[1]), DataLocationType.MARKET));
 					return true;
 				}
 				return true;
@@ -46,7 +58,7 @@ public class CommandAuction implements CommandExecutor {
 			}
 		}
 		if (cmd.getName().equalsIgnoreCase("market")) {
-			
+
 		}
 		return false;
 	}

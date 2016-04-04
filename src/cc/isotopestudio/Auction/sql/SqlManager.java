@@ -38,25 +38,17 @@ public class SqlManager {
 		try {
 			Auction.statement.executeUpdate(
 					"create table if not exists market(" +
-					"	 id int unsigned not null auto_increment primary key," +
-					"	 time timestamp not null," +
-					"	 money int not null," +
-					"	 owner text not null," +
-					"	 itemid text not null," +
-					"	 amount int not null," +
-					"	 name tinytext," +
-					"	 lore text," +
-					"	 enchant text" +
-					"	 );");
+					" id int unsigned not null auto_increment primary key," +
+					" time timestamp not null," +
+					" money int not null," +
+					" owner text not null," +
+					" item text not null" +
+					" );");
 			Auction.statement.executeUpdate(
 					"create table if not exists mail(" +
 					" id int unsigned not null auto_increment primary key," +
 					" owner text not null," +
-					" itemid text not null," +
-					" amount int not null," +
-					" name text," +
-					" lore text," +
-					" enchant text" +
+					" item text not null" +
 					" );");
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cc.isotopestudio.Auction.sql.SqlManager;
 import cc.isotopestudio.Auction.command.CommandAuction;
+import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.sql.MySQL;
 
 public class Auction extends JavaPlugin {
@@ -45,13 +46,14 @@ public class Auction extends JavaPlugin {
 			getLogger().info(pluginName + "数据库创建失败！");
 			this.getPluginLoader().disablePlugin(this);
 		}
+		Data.plugin = this;
 		PluginManager pm = this.getServer().getPluginManager();
 		
 		// pm.registerEvents(new WorldListener(this), this);
 
-		this.getCommand("auction").setExecutor(new CommandAuction());
-		this.getCommand("market").setExecutor(new CommandAuction());
-
+		this.getCommand("auction").setExecutor(new CommandAuction(this));
+		this.getCommand("market").setExecutor(new CommandAuction(this));
+		
 		getLogger().info(pluginName + "成功加载!");
 		getLogger().info(pluginName + "由ISOTOPE Studio制作!");
 		getLogger().info("http://isotopestudio.cc");
