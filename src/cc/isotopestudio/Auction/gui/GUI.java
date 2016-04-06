@@ -25,6 +25,7 @@ public abstract class GUI implements Listener {
 	protected Plugin plugin;
 	protected String[] optionNames;
 	protected ItemStack[] optionIcons;
+	protected int page;
 
 	public GUI(String name, int size, Plugin plugin) {
 		this.name = name;
@@ -38,6 +39,13 @@ public abstract class GUI implements Listener {
 	public GUI setOption(int position, ItemStack icon, String name, String... info) {
 		optionNames[position] = name;
 		optionIcons[position] = setItemNameAndLore(icon, name, info);
+		return this;
+	}
+
+	public GUI setOption(int position, ItemStack item) {
+		optionNames[position] = item.getItemMeta() == null ? item.getType().toString()
+				: item.getItemMeta().getDisplayName();
+		optionIcons[position] = item;
 		return this;
 	}
 
@@ -73,29 +81,28 @@ public abstract class GUI implements Listener {
 			}
 			System.out.println(event.getInventory().getTitle());
 			/*
-			if (handler[slot] != null && optionNames[slot] != null) {
-				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
-				handler[slot].onOptionClick(e);
-				if (e.willClose()) {
-					final Player p = (Player) event.getWhoClicked();
-					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							p.closeInventory();
-						}
-					}, 1);
-				}
-			}
-			*/
+			 * if (handler[slot] != null && optionNames[slot] != null) {
+			 * OptionClickEvent e = new OptionClickEvent((Player)
+			 * event.getWhoClicked(), slot, optionNames[slot]);
+			 * handler[slot].onOptionClick(e); if (e.willClose()) { final Player
+			 * p = (Player) event.getWhoClicked();
+			 * Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new
+			 * Runnable() { public void run() { p.closeInventory(); } }, 1); } }
+			 */
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClose(InventoryCloseEvent event) {
 		if (event.getInventory().getTitle().equals(name)) {
-			Destory();
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() {
+					Destory();
+				}
+			}, 2);
 		}
 	}
-
+	
 	private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(name);

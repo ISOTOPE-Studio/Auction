@@ -11,8 +11,6 @@ import cc.isotopestudio.Auction.sql.SerializeItemStack;
 
 public class Data {
 
-	public static Auction plugin;
-
 	public static void storeItemIntoMail(Player player, ItemStack item) {
 		StringBuilder string = new StringBuilder("insert into ");
 		string.append("mail ");
@@ -61,5 +59,23 @@ public class Data {
 		}
 		return null;
 	}
+
+	public static int getItemSize(DataLocationType type) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail;");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market;");
+			}
+			res.last();
+			return res.getRow();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	
 
 }
