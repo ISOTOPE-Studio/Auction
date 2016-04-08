@@ -60,6 +60,70 @@ public class Data {
 		return null;
 	}
 
+	public static String getOwner(int id, DataLocationType type) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail where id=" + id + ";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market where id=" + id + ";");
+			}
+			if (!res.next())
+				return "";
+			return res.getString("owner");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public static ResultSet getPlayerItemList(Player player, DataLocationType type) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
+			}
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static int getItemSizeID(DataLocationType type) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail;");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market;");
+			}
+			res.last();
+			return res.getInt("id");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int getItemSizeID(DataLocationType type, Player player) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
+			}
+			res.last();
+			return res.getInt("id");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	public static int getItemSize(DataLocationType type) {
 		ResultSet res = null;
 		try {
@@ -75,7 +139,50 @@ public class Data {
 		}
 		return 0;
 	}
-	
-	
 
+	public static int getItemSize(DataLocationType type, Player player) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
+			}
+			res.last();
+			return res.getRow();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int getMarketRowID(int count) {
+		ResultSet res = null;
+		try {
+			res = Auction.statement.executeQuery("select * from market;");
+			for (int i = 0; i < count; i++)
+				res.next();
+			return res.getInt("id");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int getRowID(DataLocationType type, Player player, int count) {
+		ResultSet res = null;
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
+			}
+			for (int i = 0; i < count; i++)
+				res.next();
+			return res.getInt("id");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

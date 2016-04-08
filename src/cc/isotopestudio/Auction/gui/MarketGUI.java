@@ -23,14 +23,13 @@ public class MarketGUI extends GUI implements Listener {
 		setOption(8, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
 		setOption(45, new ItemStack(Material.ARROW), "上一页", "第 " + (page + 1) + " 页");
 		setOption(53, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
-		int size = Data.getItemSize(DataLocationType.MARKET);
+		int size = Data.getItemSizeID(DataLocationType.MARKET);
 		System.out.println(size);
-		int index = page * 6 * 6;
+		int index = size - Data.getMarketRowID(page * 6 * 7 + 1) + 1;
 		int pos = 1;
-		while (index < size && pos < 53) {
-			System.out.println(" " + index + " " + pos);
+		while (index > 0 && pos < 53) {
 			ItemStack item = Data.getItem(index, DataLocationType.MARKET);
-			index++;
+			index--;
 			if (item == null) {
 				continue;
 			} else {
@@ -39,13 +38,15 @@ public class MarketGUI extends GUI implements Listener {
 			}
 			while (pos % 9 == 0 || pos % 9 == 8)
 				pos++;
+			System.out.println(" " + (index + 1) + " " + (pos - 1));
 		}
+
 	}
 
 	int getTotalPage() {
 		int size = Data.getItemSize(DataLocationType.MARKET);
-		int page = size / (6 * 6);
-		if (size % (6 * 6) != 0)
+		int page = size / (7 * 6);
+		if (size % (7 * 6) != 0)
 			page++;
 		return page;
 	}
@@ -81,7 +82,7 @@ public class MarketGUI extends GUI implements Listener {
 			if (slot < 0 || slot >= size) {
 				return;
 			}
-			if (/* handler[slot] != null && */optionNames[slot] != null) {
+			if (/* handler[slot] != null && */optionIcons[slot] != null) {
 				System.out.println(event.getInventory().getTitle());
 				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				if (slot == 0 || slot == 45) {
