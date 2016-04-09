@@ -1,7 +1,13 @@
 package cc.isotopestudio.Auction.data;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +22,6 @@ public class Data {
 		string.append("mail ");
 		string.append("values(null," + storeItemPre(player, item) + ");");
 		try {
-			// System.out.println(string);
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -28,8 +33,19 @@ public class Data {
 		string.append("market ");
 		string.append("values(null, null," + money + "," + storeItemPre(player, item) + ");");
 		try {
-			// System.out.println(string);
 			Auction.statement.executeUpdate(string.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void removeItem(int id, DataLocationType type) {
+		try {
+			if (type.equals(DataLocationType.MAIL)) {
+				Auction.statement.executeUpdate("delete from mail where id=" + id + ";");
+			} else if (type.equals(DataLocationType.MARKET)) {
+				Auction.statement.executeUpdate("delete from market where id=" + id + ";");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -75,6 +91,53 @@ public class Data {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	public static double getMarketPrice(int id) {
+		ResultSet res = null;
+		try {
+			res = Auction.statement.executeQuery("select * from market where id=" + id + ";");
+			if (!res.next())
+				return -1;
+			return res.getDouble("money");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public static Date getMarketDate(int id) {
+		ResultSet res = null;
+		try {
+			res = Auction.statement.executeQuery("select * from market where id=" + id + ";");
+			if (!res.next())
+				return null;
+			return (Date) res.getTimestamp("time");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getMarketRemainDate(int id) {
+		Date time = getMarketDate(id);
+		Date now = new Date();
+		time.setTime(time.getTime() + 7 * 24 * 60 * 60 * 1000);
+		long day = 0;
+		long hour = 0;
+		long min = 0;
+		long time1 = time.getTime();
+		long time2 = now.getTime();
+		long diff;
+		if (time1 < time2) {
+			return "超时!";
+		} else {
+			diff = time1 - time2;
+		}
+		day = diff / (24 * 60 * 60 * 1000);
+		hour = (diff / (60 * 60 * 1000) - day * 24);
+		min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+		return day + "天" + hour + "小时" + min + "分";
 	}
 
 	public static ResultSet getPlayerItemList(Player player, DataLocationType type) {
@@ -185,4 +248,5 @@ public class Data {
 		}
 		return 0;
 	}
+
 }

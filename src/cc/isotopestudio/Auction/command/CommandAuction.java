@@ -38,6 +38,21 @@ public class CommandAuction implements CommandExecutor {
 							Data.storeItemIntoMarket(player, item, (int) (Math.random() * 100));
 						}
 					}
+					return true;
+				}
+				if (args[0].equals("test")) {
+					if (args[1].equals("1"))
+						player.sendMessage(
+								Integer.parseInt(args[2]) + ": " + Data.getMarketRowID(Integer.parseInt(args[2])));
+					if (args[1].equals("item"))
+						player.sendMessage(Data.getItem(Integer.parseInt(args[2]), DataLocationType.MARKET).toString());
+					if (args[1].equals("money"))
+						player.sendMessage("" + Data.getMarketPrice(Integer.parseInt(args[2])));
+					if (args[1].equals("owner"))
+						player.sendMessage(Data.getOwner(Integer.parseInt(args[2]), DataLocationType.MARKET));
+					if (args[1].equals("remains"))
+						player.sendMessage(Data.getMarketRemainDate(Integer.parseInt(args[2])));
+					return true;
 				}
 				if (args[0].equalsIgnoreCase("market")) {
 					// Data.storeItemIntoMarket(player, player.getItemInHand(),

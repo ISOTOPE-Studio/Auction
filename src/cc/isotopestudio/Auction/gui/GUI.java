@@ -79,16 +79,6 @@ public abstract class GUI implements Listener {
 			if (slot < 0 || slot >= size) {
 				return;
 			}
-			System.out.println(event.getInventory().getTitle());
-			/*
-			 * if (handler[slot] != null && optionNames[slot] != null) {
-			 * OptionClickEvent e = new OptionClickEvent((Player)
-			 * event.getWhoClicked(), slot, optionNames[slot]);
-			 * handler[slot].onOptionClick(e); if (e.willClose()) { final Player
-			 * p = (Player) event.getWhoClicked();
-			 * Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new
-			 * Runnable() { public void run() { p.closeInventory(); } }, 1); } }
-			 */
 		}
 	}
 

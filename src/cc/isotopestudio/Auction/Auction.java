@@ -37,7 +37,6 @@ public class Auction extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-/*
 		getLogger().info("加载Vault API");
 		if (!setupEconomy()) {
 			getLogger().severe(pluginName + "无法加载!");
@@ -45,8 +44,7 @@ public class Auction extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-*/
-		
+
 		getLogger().info("加载配置文件中");
 
 		createFile("config");
