@@ -22,8 +22,6 @@ import cc.isotopestudio.Auction.handler.DataLocationType;
 
 public class MarketGUI extends GUI implements Listener {
 
-	private HashMap<Integer, Integer> slotIDMap;
-
 	public MarketGUI(int page, Plugin plugin) {
 		super("全球市场  第 " + (page + 1) + " 页", 9 * 6, plugin);
 		this.page = page;
@@ -94,6 +92,10 @@ public class MarketGUI extends GUI implements Listener {
 		e.setWillClose(true);
 		Player player = e.getPlayer();
 		int index = slotIDMap.get(slot);
+		if (Data.getOwner(index, DataLocationType.MARKET).equalsIgnoreCase(player.getName())) {
+			player.sendMessage("不能购买自己的物品，请在展示柜中下架商品");
+			return;
+		}
 		double price = Data.getMarketPrice(index);
 		if (price > Auction.econ.getBalance(player.getName())) {
 			player.sendMessage("余额不足");
@@ -105,37 +107,18 @@ public class MarketGUI extends GUI implements Listener {
 		player.sendMessage("成功购买");
 	}
 
-	void onUpshelfItem(OptionClickEvent e, int slot) {
-		e.setWillClose(true);
-		Player player = e.getPlayer();
-		player.sendMessage("输入价格");
-	}
-
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
 		if (event.getInventory().getTitle().equals(name)) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
-			System.out.println("slot: " + slot);
-			if (slot < 0 || slot > 89) {
+			if (slot < 0 || slot >= size) {
 				return;
 			}
 
-			OptionClickEvent e = null;
-			if (slot > 53) {
-				if (!event.getCurrentItem().getType().equals(Material.AIR)
-						&& event.getClick().equals(ClickType.DOUBLE_CLICK)) {
-					ItemStack item = event.getCurrentItem();
-					e = new OptionClickEvent((Player) event.getWhoClicked(), slot, item.getItemMeta() == null
-							? item.getType().toString() : item.getItemMeta().getDisplayName());
-					onUpshelfItem(e, slot);
-				} else
-					return;
-			}
-
-			else if (/* handler[slot] != null && */optionIcons[slot] != null) {
+			if (optionIcons[slot] != null) {
 				System.out.println(event.getInventory().getTitle());
-				e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
+				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				if (slot == 0 || slot == 45) {
 					if (page > 0)
 						onPreviousPage(e);
@@ -151,14 +134,15 @@ public class MarketGUI extends GUI implements Listener {
 						onBuyItem(e, slot);
 					}
 				}
-			}
-			if (e != null && e.willClose()) {
-				final Player p = (Player) event.getWhoClicked();
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-					public void run() {
-						p.closeInventory();
-					}
-				}, 1);
+
+				if (e != null && e.willClose()) {
+					final Player p = (Player) event.getWhoClicked();
+					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+						public void run() {
+							p.closeInventory();
+						}
+					}, 1);
+				}
 			}
 		}
 	}

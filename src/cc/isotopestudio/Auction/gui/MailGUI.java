@@ -87,7 +87,7 @@ public class MailGUI extends GUI implements Listener {
 			if (slot < 0 || slot >= size) {
 				return;
 			}
-			if (/* handler[slot] != null && */optionNames[slot] != null) {
+			if (/* handler[slot] != null && */optionIcons[slot] != null) {
 				System.out.println(event.getInventory().getTitle());
 				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				if (slot == 9) {

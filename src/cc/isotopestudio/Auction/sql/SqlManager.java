@@ -40,7 +40,7 @@ public class SqlManager {
 					"create table if not exists market(" +
 					" id int unsigned not null auto_increment primary key," +
 					" time timestamp not null," +
-					" money int not null," +
+					" money double not null," +
 					" owner text not null," +
 					" item text not null" +
 					" );");
@@ -52,6 +52,7 @@ public class SqlManager {
 					" );");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			plugin.getLogger().info(Auction.pluginName + "Êý¾Ý¿â³ö´í Error4");
 			return false;
 		}
 		return true;

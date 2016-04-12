@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import cc.isotopestudio.Auction.sql.SqlManager;
 import net.milkbowl.vault.economy.Economy;
 import cc.isotopestudio.Auction.command.CommandAuction;
+import cc.isotopestudio.Auction.listener.PriceInput;
 import cc.isotopestudio.Auction.sql.MySQL;
 
 public class Auction extends JavaPlugin {
@@ -60,7 +61,7 @@ public class Auction extends JavaPlugin {
 		}
 		PluginManager pm = this.getServer().getPluginManager();
 
-		// pm.registerEvents(new WorldListener(this), this);
+		pm.registerEvents(new PriceInput(), this);
 
 		this.getCommand("auction").setExecutor(new CommandAuction(this));
 		this.getCommand("market").setExecutor(new CommandAuction(this));

@@ -1,6 +1,7 @@
 package cc.isotopestudio.Auction.gui;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,7 +27,8 @@ public abstract class GUI implements Listener {
 	protected String[] optionNames;
 	protected ItemStack[] optionIcons;
 	protected int page;
-
+	protected HashMap<Integer, Integer> slotIDMap;
+	
 	public GUI(String name, int size, Plugin plugin) {
 		this.name = name;
 		this.size = size;
