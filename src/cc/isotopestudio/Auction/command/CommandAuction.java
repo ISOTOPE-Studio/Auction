@@ -31,15 +31,6 @@ public class CommandAuction implements CommandExecutor {
 			}
 			Player player = (Player) sender;
 			if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
-				if (args[0].equals("store")) {
-					for (int i = 0; i <= 36; i++) {
-						ItemStack item = player.getInventory().getItem(i);
-						if (item != null) {
-							Data.storeItemIntoMarket(player, item, (int) (Math.random() * 100));
-						}
-					}
-					return true;
-				}
 				if (args[0].equals("test")) {
 					if (args[1].equals("1"))
 						player.sendMessage(
@@ -55,20 +46,15 @@ public class CommandAuction implements CommandExecutor {
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("market")) {
-					// Data.storeItemIntoMarket(player, player.getItemInHand(),
-					// 100);
 					(new MarketGUI(0, plugin)).open(player);
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("mail")) {
-					// Data.storeItemIntoMail(player, player.getItemInHand());
 					(new MailGUI(player, 0, plugin)).open(player);
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("shelf")) {
 					(new ShelfGUI(player, 0, plugin)).open(player);
-					// player.setItemInHand(Data.getItem(Integer.parseInt(args[1]),
-					// DataLocationType.MARKET));
 					return true;
 				}
 				return true;
@@ -82,9 +68,6 @@ public class CommandAuction implements CommandExecutor {
 						new StringBuilder().append(ChatColor.GREEN).append("/auction shelf 查看玩家上架的商品").toString());
 				return true;
 			}
-		}
-		if (cmd.getName().equalsIgnoreCase("market")) {
-
 		}
 		return false;
 	}

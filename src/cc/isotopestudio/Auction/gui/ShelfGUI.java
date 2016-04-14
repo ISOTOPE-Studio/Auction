@@ -93,7 +93,7 @@ public class ShelfGUI extends GUI implements Listener {
 	void onUnshelfItem(OptionClickEvent e, int slot) {
 		e.setWillClose(true);
 		int index = slotIDMap.get(slot);
-		Data.storeItemIntoMail(player, Data.getItem(index, DataLocationType.MARKET));
+		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
 		Data.removeItem(index, DataLocationType.MARKET);
 		player.sendMessage("³É¹¦ÏÂ¼Ü");
 	}
@@ -128,35 +128,37 @@ public class ShelfGUI extends GUI implements Listener {
 				} else {
 					return;
 				}
+				
+			} else if (!event.getCursor().getType().equals(Material.AIR)) {
+				// Upshelf step 2
+				System.out.println("Step" + 2);
+				event.setCancelled(false);
+				ItemStack item = event.getCursor().clone();
+				event.setCurrentItem(null);
+				e = new OptionClickEvent((Player) event.getWhoClicked(), slot,
+						item.getItemMeta() == null ? item.getType().toString() : item.getItemMeta().getDisplayName());
+				onUpshelfItem(e, item);
+				
 			} else if (optionIcons[slot] != null) {
 				e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
-				if (!event.getCursor().getType().equals(Material.AIR)) {
-					// Upshelf step 2
-					System.out.println("Step" + 2);
-					event.setCancelled(false);
-					ItemStack item = event.getCursor().clone();
-					event.setCurrentItem(null);
-					e = new OptionClickEvent((Player) event.getWhoClicked(), slot, item.getItemMeta() == null
-							? item.getType().toString() : item.getItemMeta().getDisplayName());
-					onUpshelfItem(e, item);
-				} else {
-					event.setCancelled(true);
-					if (slot == 0) {
-						if (page > 0)
-							onPreviousPage(e);
-						else
-							return;
-					} else if (slot == 8) {
-						if (page < getTotalPage() - 1)
-							onNextPage(e);
-						else
-							return;
-					} else if (slot % 9 > 0 && slot % 9 < 8) {
-						if (event.getClick().equals(ClickType.DOUBLE_CLICK)) {
-							onUnshelfItem(e, slot);
-						}
+				event.setCancelled(true);
+				if (slot == 0) {
+					if (page > 0)
+						onPreviousPage(e);
+					else
+						return;
+				} else if (slot == 8) {
+					if (page < getTotalPage() - 1)
+						onNextPage(e);
+					else
+						return;
+				} else if (slot % 9 > 0 && slot % 9 < 8) {
+					if (event.getClick().equals(ClickType.DOUBLE_CLICK)) {
+						onUnshelfItem(e, slot);
 					}
 				}
+			} else {
+				return;
 			}
 
 			// handler[slot].onOptionClick(e);

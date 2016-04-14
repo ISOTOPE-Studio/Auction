@@ -9,8 +9,4 @@ commands:
   Auction:
     description: Auction command
     usage: /<command> - Get Information
-    aliases: paimai, globalmarket
-  market:
-    description: Auction command
-    usage: /<command> - Get Information
-    aliases: market, am
+    aliases: paimai

@@ -1,15 +1,14 @@
 package cc.isotopestudio.Auction.data;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.handler.DataLocationType;
@@ -17,10 +16,12 @@ import cc.isotopestudio.Auction.sql.SerializeItemStack;
 
 public class Data {
 
-	public static void storeItemIntoMail(Player player, ItemStack item) {
+	public final static String moneyName = "!-!money!-!";
+
+	public static void storeItemIntoMail(String playerName, ItemStack item) {
 		StringBuilder string = new StringBuilder("insert into ");
 		string.append("mail ");
-		string.append("values(null," + storeItemPre(player, item) + ");");
+		string.append("values(null," + storeItemPre(playerName, item) + ", null);");
 		try {
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
@@ -28,10 +29,29 @@ public class Data {
 		}
 	}
 
-	public static void storeItemIntoMarket(Player player, ItemStack item, double money) {
+	public static void storeMoneyIntoMail(String playerName, double money) {
+		ItemStack paper = new ItemStack(Material.PAPER);
+		ItemMeta meta = paper.getItemMeta();
+		meta.setDisplayName(moneyName);
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add("你出售的物品已被购买!");
+		lore.add("金币: " + money);
+		meta.setLore(lore);
+		paper.setItemMeta(meta);
+		StringBuilder string = new StringBuilder("insert into ");
+		string.append("mail ");
+		string.append("values(null," + storeItemPre(playerName, paper) + "," + money + ");");
+		try {
+			Auction.statement.executeUpdate(string.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void storeItemIntoMarket(String playerName, ItemStack item, double money) {
 		StringBuilder string = new StringBuilder("insert into ");
 		string.append("market ");
-		string.append("values(null, null," + money + "," + storeItemPre(player, item) + ");");
+		string.append("values(null, null," + money + "," + storeItemPre(playerName, item) + ");");
 		try {
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
@@ -51,8 +71,7 @@ public class Data {
 		}
 	}
 
-	private static String storeItemPre(Player player, ItemStack item) {
-		String playerName = player.getName();
+	private static String storeItemPre(String playerName, ItemStack item) {
 		String itemString = SerializeItemStack.itemToStringBlob(item).replace("\\", "\\\\").replace("\"", "\\\"");
 		String string = "\"" + playerName + "\", \"" + itemString + "\"";
 		return string;
@@ -106,6 +125,19 @@ public class Data {
 		return -1;
 	}
 
+	public static double getMailMoney(int id) {
+		ResultSet res = null;
+		try {
+			res = Auction.statement.executeQuery("select * from mail where id=" + id + ";");
+			if (!res.next())
+				return -1;
+			return res.getDouble("money");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
 	public static Date getMarketDate(int id) {
 		ResultSet res = null;
 		try {
@@ -130,7 +162,7 @@ public class Data {
 		long time2 = now.getTime();
 		long diff;
 		if (time1 < time2) {
-			return "超时!";
+			return "timeout";
 		} else {
 			diff = time1 - time2;
 		}

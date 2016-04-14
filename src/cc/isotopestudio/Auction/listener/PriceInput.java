@@ -36,7 +36,11 @@ public class PriceInput implements Listener {
 			player.sendMessage("这不是有效的数字请再试");
 			return;
 		}
-		Data.storeItemIntoMarket(player, item, price);
+		if (price <= 0) {
+			player.sendMessage("这不是有效的数字请再试");
+			return;
+		}
+		Data.storeItemIntoMarket(player.getName(), item, price);
 		map.remove(player);
 		player.sendMessage("成功上架");
 	}

@@ -9,8 +9,11 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import cc.isotopestudio.Auction.sql.SqlManager;
 import net.milkbowl.vault.economy.Economy;
+
+import cc.isotopestudio.Auction.sql.SqlManager;
+import cc.isotopestudio.Auction.task.ClearOutdatedItem;
+import cc.isotopestudio.Auction.task.MailMsg;
 import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.listener.PriceInput;
 import cc.isotopestudio.Auction.sql.MySQL;
@@ -64,8 +67,9 @@ public class Auction extends JavaPlugin {
 		pm.registerEvents(new PriceInput(), this);
 
 		this.getCommand("auction").setExecutor(new CommandAuction(this));
-		this.getCommand("market").setExecutor(new CommandAuction(this));
 
+		(new ClearOutdatedItem()).runTaskTimer(this, 60, 20 * 60);
+		(new MailMsg()).runTaskTimer(this, 60, 5 * 20 * 60);
 		getLogger().info(pluginName + "成功加载!");
 		getLogger().info(pluginName + "由ISOTOPE Studio制作!");
 		getLogger().info("http://isotopestudio.cc");

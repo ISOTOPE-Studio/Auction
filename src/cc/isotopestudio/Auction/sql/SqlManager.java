@@ -48,7 +48,8 @@ public class SqlManager {
 					"create table if not exists mail(" +
 					" id int unsigned not null auto_increment primary key," +
 					" owner text not null," +
-					" item text not null" +
+					" item text not null," +
+					" money double" +
 					" );");
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -102,7 +102,12 @@ public class MarketGUI extends GUI implements Listener {
 			return;
 		}
 		Auction.econ.withdrawPlayer(player.getName(), price);
-		Data.storeItemIntoMail(player, Data.getItem(index, DataLocationType.MARKET));
+		String ownerName = Data.getOwner(index, DataLocationType.MARKET);
+		Data.storeMoneyIntoMail(ownerName, price);
+		if (Bukkit.getPlayer(ownerName) != null) {
+			Bukkit.getPlayer(ownerName).sendMessage("你的物品被购买，去邮箱中查看！");
+		}
+		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
 		Data.removeItem(index, DataLocationType.MARKET);
 		player.sendMessage("成功购买");
 	}
