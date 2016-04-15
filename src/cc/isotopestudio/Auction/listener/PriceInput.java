@@ -9,14 +9,18 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import cc.isotopestudio.Auction.data.Data;
+import cc.isotopestudio.Auction.utli.S;
 
 public class PriceInput implements Listener {
 
-	static HashMap<Player, ItemStack> map = new HashMap<Player, ItemStack>();
+	static HashMap<String, ItemStack> map = new HashMap<String, ItemStack>();
 
-	public static boolean add(Player player, ItemStack item) {
-		if (map.get(player) == null) {
-			map.put(player, item);
+	public static void add(Player player, ItemStack item) {
+		map.put(player.getName(), item);
+	}
+
+	public static boolean ifAvailable(Player player) {
+		if (map.get(player.getName()) == null) {
 			return true;
 		} else
 			return false;
@@ -25,7 +29,7 @@ public class PriceInput implements Listener {
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
-		ItemStack item = map.get(player);
+		ItemStack item = map.get(player.getName());
 		double price = 0;
 		if (item == null)
 			return;
@@ -33,15 +37,15 @@ public class PriceInput implements Listener {
 		try {
 			price = Double.parseDouble(event.getMessage());
 		} catch (Exception e) {
-			player.sendMessage("这不是有效的数字请再试");
+			player.sendMessage(S.toPrefixRed("这不是有效的数字请再试"));
 			return;
 		}
 		if (price <= 0) {
-			player.sendMessage("这不是有效的数字请再试");
+			player.sendMessage(S.toPrefixRed("这不是有效的数字请再试"));
 			return;
 		}
 		Data.storeItemIntoMarket(player.getName(), item, price);
-		map.remove(player);
-		player.sendMessage("成功上架");
+		map.remove(player.getName());
+		player.sendMessage(S.toPrefixGreen("成功上架"));
 	}
 }

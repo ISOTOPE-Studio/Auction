@@ -51,6 +51,12 @@ public class SqlManager {
 					" item text not null," +
 					" money double" +
 					" );");
+			Auction.statement.executeUpdate(
+					"create table if not exists msg(" +
+					" id int unsigned not null auto_increment primary key," +
+					" player text not null," +
+					" msg text not null" +
+					" );");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			plugin.getLogger().info(Auction.pluginName + "Êý¾Ý¿â³ö´í Error4");

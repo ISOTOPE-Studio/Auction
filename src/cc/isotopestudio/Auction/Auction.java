@@ -15,6 +15,7 @@ import cc.isotopestudio.Auction.sql.SqlManager;
 import cc.isotopestudio.Auction.task.ClearOutdatedItem;
 import cc.isotopestudio.Auction.task.MailMsg;
 import cc.isotopestudio.Auction.command.CommandAuction;
+import cc.isotopestudio.Auction.listener.PlayerJoinMsg;
 import cc.isotopestudio.Auction.listener.PriceInput;
 import cc.isotopestudio.Auction.sql.MySQL;
 
@@ -65,6 +66,7 @@ public class Auction extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 
 		pm.registerEvents(new PriceInput(), this);
+		pm.registerEvents(new PlayerJoinMsg(this), this);
 
 		this.getCommand("auction").setExecutor(new CommandAuction(this));
 

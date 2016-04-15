@@ -19,22 +19,22 @@ import org.bukkit.plugin.Plugin;
 
 import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.data.Data;
-import cc.isotopestudio.Auction.handler.DataLocationType;
+import cc.isotopestudio.Auction.utli.DataLocationType;
+import cc.isotopestudio.Auction.utli.S;
 
 public class MailGUI extends GUI implements Listener {
 
 	private final Player player;
-	private final String moneyDisplayName = "金钱";
+	private final String moneyDisplayName = S.toYellow("金钱");
 
 	public MailGUI(Player player, int page, Plugin plugin) {
-		super(player.getName() + "的邮箱  第 " + (page + 1) + " 页", 9 * 3, plugin);
+		super(S.toBoldDarkGreen(player.getName() + "的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, plugin);
 		this.player = player;
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
-		setOption(9, new ItemStack(Material.ARROW), "上一页", "第 " + (page + 1) + " 页");
-		setOption(17, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
+		setOption(9, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
+		setOption(17, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
 		int size = Data.getItemSizeID(DataLocationType.MAIL);
-		System.out.println(size);
 		int index = Data.getRowID(DataLocationType.MAIL, player, page * 3 * 7 + 1) - 1;
 		int pos = 1;
 		while (index <= size && pos < 26) {
@@ -42,7 +42,6 @@ public class MailGUI extends GUI implements Listener {
 			if (!Data.getOwner(index, DataLocationType.MAIL).equals(player.getName())) {
 				continue;
 			}
-			System.out.println(" " + index + " " + pos);
 			ItemStack item = Data.getItem(index, DataLocationType.MAIL);
 			if (item == null) {
 				continue;
@@ -55,8 +54,8 @@ public class MailGUI extends GUI implements Listener {
 				} catch (Exception e) {
 				}
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
-				lore.add("------- (" + index + ") ------");
-				lore.add("双击取回！");
+				lore.add(S.toGray("-------- (" + index + ") --------"));
+				lore.add(S.toYellow("双击取回！"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -103,21 +102,21 @@ public class MailGUI extends GUI implements Listener {
 		int index = slotIDMap.get(slot);
 		ItemStack item = Data.getItem(index, DataLocationType.MAIL);
 		boolean isMoney = false;
-		try{
+		try {
 			isMoney = item.getItemMeta().getDisplayName().equals(Data.moneyName);
-		}catch(Exception ex){
+		} catch (Exception ex) {
 		}
 		if (isMoney) {
 			double money = Data.getMailMoney(index);
 			Auction.econ.depositPlayer(player.getName(), money);
-			player.sendMessage("成功领取" + money);
+			player.sendMessage(S.toPrefixGreen("成功领取金币" + money));
 		} else {
 			if (player.getInventory().firstEmpty() == -1) {
-				player.sendMessage("背包满了?");
+				player.sendMessage(S.toPrefixRed("背包满了?"));
 				return;
 			}
 			player.getInventory().addItem(item);
-			player.sendMessage("成功物品");
+			player.sendMessage(S.toPrefixGreen("物品已存放至背包"));
 		}
 		Data.removeItem(index, DataLocationType.MAIL);
 

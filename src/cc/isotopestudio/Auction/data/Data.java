@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import cc.isotopestudio.Auction.Auction;
-import cc.isotopestudio.Auction.handler.DataLocationType;
 import cc.isotopestudio.Auction.sql.SerializeItemStack;
+import cc.isotopestudio.Auction.utli.DataLocationType;
 
 public class Data {
 
@@ -25,7 +25,7 @@ public class Data {
 		try {
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 	}
 
@@ -44,7 +44,7 @@ public class Data {
 		try {
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 	}
 
@@ -55,7 +55,42 @@ public class Data {
 		try {
 			Auction.statement.executeUpdate(string.toString());
 		} catch (SQLException e) {
+
+		}
+	}
+
+	public static void storeMsg(String playerName, String msg) {
+		StringBuilder string = new StringBuilder("insert into ");
+		string.append("msg ");
+		string.append("values(null,\"" + playerName + "\", \"" + msg + "\");");
+		try {
+			Auction.statement.executeUpdate(string.toString());
+		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static ArrayList<String> getMsg(String PlayerName) {
+		ResultSet res = null;
+		ArrayList<String> result;
+		try {
+			res = Auction.statement.executeQuery("select * from msg where player=\"" + PlayerName + "\";");
+			result = new ArrayList<String>();
+			while (res.next()) {
+				result.add(res.getString("msg"));
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void removeMsg(String string) {
+		try {
+			Auction.statement.executeUpdate("delete from msg where player=\"" + string + "\";");
+		} catch (SQLException e) {
+
 		}
 	}
 
@@ -67,7 +102,7 @@ public class Data {
 				Auction.statement.executeUpdate("delete from market where id=" + id + ";");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 	}
 
@@ -90,7 +125,7 @@ public class Data {
 			String itemString = res.getString("item");
 			return SerializeItemStack.stringBlobToItem(itemString);
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return null;
 	}
@@ -107,7 +142,7 @@ public class Data {
 				return "";
 			return res.getString("owner");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return "";
 	}
@@ -120,7 +155,7 @@ public class Data {
 				return -1;
 			return res.getDouble("money");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return -1;
 	}
@@ -133,7 +168,7 @@ public class Data {
 				return -1;
 			return res.getDouble("money");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return -1;
 	}
@@ -146,7 +181,7 @@ public class Data {
 				return null;
 			return (Date) res.getTimestamp("time");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return null;
 	}
@@ -182,7 +217,7 @@ public class Data {
 			}
 			return res;
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return null;
 	}
@@ -195,10 +230,13 @@ public class Data {
 			} else if (type.equals(DataLocationType.MARKET)) {
 				res = Auction.statement.executeQuery("select * from market;");
 			}
+			if (res.wasNull()) {
+				return -1;
+			}
 			res.last();
 			return res.getInt("id");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}
@@ -214,7 +252,7 @@ public class Data {
 			res.last();
 			return res.getInt("id");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}
@@ -230,7 +268,7 @@ public class Data {
 			res.last();
 			return res.getRow();
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}
@@ -246,7 +284,7 @@ public class Data {
 			res.last();
 			return res.getRow();
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}
@@ -259,7 +297,7 @@ public class Data {
 				res.next();
 			return res.getInt("id");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}
@@ -276,7 +314,7 @@ public class Data {
 				res.next();
 			return res.getInt("id");
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		}
 		return 0;
 	}

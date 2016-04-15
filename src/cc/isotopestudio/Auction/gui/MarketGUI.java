@@ -18,37 +18,36 @@ import org.bukkit.plugin.Plugin;
 
 import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.data.Data;
-import cc.isotopestudio.Auction.handler.DataLocationType;
+import cc.isotopestudio.Auction.utli.DataLocationType;
+import cc.isotopestudio.Auction.utli.S;
 
 public class MarketGUI extends GUI implements Listener {
 
 	public MarketGUI(int page, Plugin plugin) {
-		super("全球市场  第 " + (page + 1) + " 页", 9 * 6, plugin);
+		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页"), 9 * 6, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
-		setOption(0, new ItemStack(Material.ARROW), "上一页", "第 " + (page + 1) + " 页");
-		setOption(8, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
-		setOption(45, new ItemStack(Material.ARROW), "上一页", "第 " + (page + 1) + " 页");
-		setOption(53, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
+		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
+		setOption(8, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
+		setOption(45, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
+		setOption(53, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
 		int size = Data.getItemSize(DataLocationType.MARKET);
 		System.out.println(size);
 		int index = Data.getMarketRowID(size - page * 6 * 7) + 1;
 		int pos = 1;
 		while (index > 0 && pos < 53) {
 			index--;
-			System.out.println(" " + (index) + " " + (pos));
 			ItemStack item = Data.getItem(index, DataLocationType.MARKET);
 			if (item == null) {
 				continue;
 			} else {
-				System.out.println("Entering" + index);
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
-				lore.add("------- (" + index + ") ------");
-				lore.add("拍卖人 : " + Data.getOwner(index, DataLocationType.MARKET));
-				lore.add("价格 ：" + Data.getMarketPrice(index));
-				lore.add("剩余时间：" + Data.getMarketRemainDate(index));
-				lore.add("双击购买！");
+				lore.add(S.toGray("-------- (" + index + ") --------"));
+				lore.add(S.toAqua("售卖:   ") + S.toGreen(Data.getOwner(index, DataLocationType.MARKET)));
+				lore.add(S.toAqua("价格:   ") + S.toGreen(Data.getMarketPrice(index) + ""));
+				lore.add(S.toAqua("剩余:   ") + S.toGreen(Data.getMarketRemainDate(index)));
+				lore.add(S.toYellow("双击购买！"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -93,23 +92,25 @@ public class MarketGUI extends GUI implements Listener {
 		Player player = e.getPlayer();
 		int index = slotIDMap.get(slot);
 		if (Data.getOwner(index, DataLocationType.MARKET).equalsIgnoreCase(player.getName())) {
-			player.sendMessage("不能购买自己的物品，请在展示柜中下架商品");
+			player.sendMessage(S.toPrefixRed("不能购买自己的物品，请在展示柜中下架商品"));
 			return;
 		}
 		double price = Data.getMarketPrice(index);
 		if (price > Auction.econ.getBalance(player.getName())) {
-			player.sendMessage("余额不足");
+			player.sendMessage(S.toPrefixRed("余额不足"));
 			return;
 		}
 		Auction.econ.withdrawPlayer(player.getName(), price);
 		String ownerName = Data.getOwner(index, DataLocationType.MARKET);
 		Data.storeMoneyIntoMail(ownerName, price);
 		if (Bukkit.getPlayer(ownerName) != null) {
-			Bukkit.getPlayer(ownerName).sendMessage("你的物品被购买，去邮箱中查看！");
+			Bukkit.getPlayer(ownerName).sendMessage(S.toYellow("你的物品被购买，去邮箱中查看！"));
+		} else {
+			Data.storeMsg(ownerName, S.toYellow("你的物品被购买，去邮箱中查看！"));
 		}
 		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
 		Data.removeItem(index, DataLocationType.MARKET);
-		player.sendMessage("成功购买");
+		player.sendMessage(S.toGreen("成功购买"));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
