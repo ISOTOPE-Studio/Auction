@@ -17,20 +17,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import cc.isotopestudio.Auction.data.Data;
-import cc.isotopestudio.Auction.handler.DataLocationType;
 import cc.isotopestudio.Auction.listener.PriceInput;
+import cc.isotopestudio.Auction.utli.DataLocationType;
+import cc.isotopestudio.Auction.utli.S;
 
 public class ShelfGUI extends GUI implements Listener {
 
 	private final Player player;
 
 	public ShelfGUI(Player player, int page, Plugin plugin) {
-		super(player.getName() + "的上架商品", 9, plugin);
+		super(S.toBoldPurple(player.getName() + "的上架商品"), 9, plugin);
 		this.player = player;
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
-		setOption(0, new ItemStack(Material.ARROW), "上一页", "第 " + (page + 1) + " 页");
-		setOption(8, new ItemStack(Material.ARROW), "下一页", "第 " + (page + 1) + " 页");
+		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
+		setOption(8, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
 		int size = Data.getItemSizeID(DataLocationType.MARKET);
 		System.out.println(size);
 		int index = Data.getRowID(DataLocationType.MARKET, player, page * 1 * 7 + 1) - 1;
@@ -40,17 +41,16 @@ public class ShelfGUI extends GUI implements Listener {
 			if (!Data.getOwner(index, DataLocationType.MARKET).equals(player.getName())) {
 				continue;
 			}
-			System.out.println(" " + index + " " + pos);
 			ItemStack item = Data.getItem(index, DataLocationType.MARKET);
 			if (item == null) {
 				continue;
 			} else {
 				ItemMeta meta = item.getItemMeta();
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
-				lore.add("------- (" + index + ") ------");
-				lore.add("价格 ：" + Data.getMarketPrice(index));
-				lore.add("剩余时间：" + Data.getMarketRemainDate(index));
-				lore.add("双击下架！");
+				lore.add(S.toGray("-------- (" + index + ") --------"));
+				lore.add(S.toAqua("价格:   ") + S.toGreen(Data.getMarketPrice(index) + ""));
+				lore.add(S.toAqua("剩余:   ") + S.toGreen(Data.getMarketRemainDate(index)));
+				lore.add(S.toYellow("双击下架！"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -95,17 +95,14 @@ public class ShelfGUI extends GUI implements Listener {
 		int index = slotIDMap.get(slot);
 		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
 		Data.removeItem(index, DataLocationType.MARKET);
-		player.sendMessage("成功下架");
+		player.sendMessage(S.toPrefixGreen("成功下架"));
 	}
 
 	void onUpshelfItem(OptionClickEvent e, ItemStack item) {
 		e.setWillClose(true);
 		Player player = e.getPlayer();
-		if (PriceInput.add(player, item)) {
-			player.sendMessage("输入价格");
-		} else {
-			player.sendMessage("你有未完成的上架");
-		}
+		player.sendMessage(S.toPrefixYellow("请在聊天框内输入价格"));
+		PriceInput.add(player, item);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -122,23 +119,26 @@ public class ShelfGUI extends GUI implements Listener {
 				if (!event.getCurrentItem().getType().equals(Material.AIR)
 						&& event.getCursor().getType().equals(Material.AIR)) {
 					// Upshelf step 1
-					System.out.println("Step" + 1);
 					event.setCancelled(false);
 					return;
 				} else {
 					return;
 				}
-				
+
 			} else if (!event.getCursor().getType().equals(Material.AIR)) {
 				// Upshelf step 2
-				System.out.println("Step" + 2);
+				if (!PriceInput.ifAvailable(player)) {
+					player.sendMessage(S.toPrefixRed("你有未完成的上架"));
+					event.setCancelled(true);
+					return;
+				}
 				event.setCancelled(false);
 				ItemStack item = event.getCursor().clone();
 				event.setCurrentItem(null);
 				e = new OptionClickEvent((Player) event.getWhoClicked(), slot,
 						item.getItemMeta() == null ? item.getType().toString() : item.getItemMeta().getDisplayName());
 				onUpshelfItem(e, item);
-				
+
 			} else if (optionIcons[slot] != null) {
 				e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				event.setCancelled(true);
