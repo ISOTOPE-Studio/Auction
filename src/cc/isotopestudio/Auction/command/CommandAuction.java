@@ -1,6 +1,6 @@
 package cc.isotopestudio.Auction.command;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,6 @@ import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.gui.MailGUI;
 import cc.isotopestudio.Auction.gui.MarketGUI;
 import cc.isotopestudio.Auction.gui.ShelfGUI;
-import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
 
 public class CommandAuction implements CommandExecutor {
@@ -44,6 +43,34 @@ public class CommandAuction implements CommandExecutor {
 					(new ShelfGUI(player, 0, plugin)).open(player);
 					return true;
 				}
+				try {
+					double price = Double.parseDouble(args[0]);
+					ItemStack item = player.getItemInHand().clone();
+					if (item.getType().equals(Material.AIR)) {
+						player.sendMessage(S.toPrefixRed("手中没有物品"));
+						return true;
+					}
+					try {
+						for (String lore : item.getItemMeta().getLore()) {
+							if (lore.contains("绑定")) {
+								player.sendMessage(S.toPrefixRed("无法上架绑定的道具"));
+								return true;
+							}
+						}
+					} catch (Exception ex) {
+					}
+					if (price <= 0) {
+						player.sendMessage(S.toPrefixRed("这不是有效的数字请再试"));
+						return true;
+					}
+					player.setItemInHand(null);
+					Data.storeItemIntoMarket(player.getName(), item, price);
+					player.sendMessage(S.toPrefixGreen("成功上架"));
+
+					return true;
+				} catch (Exception e) {
+
+				}
 				sendHelp(player, label);
 				return true;
 			} else {
@@ -56,13 +83,13 @@ public class CommandAuction implements CommandExecutor {
 
 	void sendHelp(CommandSender player, String label) {
 		player.sendMessage(S.toPrefixGreen("帮助菜单"));
+		player.sendMessage(S.toBoldGreen("/" + label + " <价格> 上架商品"));
 		player.sendMessage(S.toBoldGreen("/" + label + " market 查看拍卖行"));
-		player.sendMessage(S.toYellow("这里能购买(双击)所有人拍卖的物品"));
+		player.sendMessage(S.toGold("这里能购买(双击)所有人拍卖的物品"));
 		player.sendMessage(S.toBoldGreen("/" + label + " mail 查看玩家邮箱"));
-		player.sendMessage(S.toYellow("这里查看你的邮件"));
+		player.sendMessage(S.toGold("这里查看你的邮件"));
 		player.sendMessage(S.toBoldGreen("/" + label + " shelf 查看玩家上架的商品"));
-		player.sendMessage(S.toYellow("这里能上架/下架你拍卖的物品"));
-		player.sendMessage(S.toYellow("上架: 把物品放进GUI中，下架: 双击物品"));
+		player.sendMessage(S.toGold("这里能上架/下架你拍卖的物品"));
 	}
 
 }

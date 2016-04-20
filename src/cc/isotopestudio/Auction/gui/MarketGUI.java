@@ -32,7 +32,6 @@ public class MarketGUI extends GUI implements Listener {
 		setOption(45, new ItemStack(Material.ARROW), S.toBoldGold("ÉÏÒ»Ò³"), S.toRed("µÚ " + (page + 1) + " Ò³"));
 		setOption(53, new ItemStack(Material.ARROW), S.toBoldGold("ÏÂÒ»Ò³"), S.toRed("µÚ " + (page + 1) + " Ò³"));
 		int size = Data.getItemSize(DataLocationType.MARKET);
-		System.out.println(size);
 		int index = Data.getMarketRowID(size - page * 6 * 7) + 1;
 		int pos = 1;
 		while (index > 0 && pos < 53) {
@@ -47,7 +46,7 @@ public class MarketGUI extends GUI implements Listener {
 				lore.add(S.toAqua("ÊÛÂô:   ") + S.toGreen(Data.getOwner(index, DataLocationType.MARKET)));
 				lore.add(S.toAqua("¼Û¸ñ:   ") + S.toGreen(Data.getMarketPrice(index) + ""));
 				lore.add(S.toAqua("Ê£Óà:   ") + S.toGreen(Data.getMarketRemainDate(index)));
-				lore.add(S.toYellow("Ë«»÷¹ºÂò£¡"));
+				lore.add(S.toYellow("Shift+ÓÒ¼ü ¹ºÂò£¡"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -123,7 +122,6 @@ public class MarketGUI extends GUI implements Listener {
 			}
 
 			if (optionIcons[slot] != null) {
-				System.out.println(event.getInventory().getTitle());
 				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				if (slot == 0 || slot == 45) {
 					if (page > 0)
@@ -136,7 +134,7 @@ public class MarketGUI extends GUI implements Listener {
 					else
 						return;
 				} else if (slot % 9 > 0 && slot % 9 < 8) {
-					if (event.getClick().equals(ClickType.DOUBLE_CLICK)) {
+					if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
 						onBuyItem(e, slot);
 					}
 				}

@@ -25,6 +25,10 @@ public class S {
 		return new StringBuilder().append(ChatColor.GRAY).append(s).toString();
 	}
 
+	public static String toGold(String s) {
+		return new StringBuilder().append(ChatColor.GOLD).append(s).toString();
+	}
+
 	public static String toBoldGreen(String s) {
 		return new StringBuilder().append(ChatColor.GREEN).append(ChatColor.BOLD).append(s).toString();
 	}

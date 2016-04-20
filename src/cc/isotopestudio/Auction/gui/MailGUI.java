@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,7 +54,7 @@ public class MailGUI extends GUI implements Listener {
 				}
 				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
 				lore.add(S.toGray("-------- (" + index + ") --------"));
-				lore.add(S.toYellow("双击取回！"));
+				lore.add(S.toYellow("Shift+右键 取回！"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -132,7 +131,6 @@ public class MailGUI extends GUI implements Listener {
 			}
 
 			if (optionIcons[slot] != null) {
-				System.out.println(event.getInventory().getTitle());
 				OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
 				if (slot == 9) {
 					if (page > 0)
@@ -145,7 +143,7 @@ public class MailGUI extends GUI implements Listener {
 					else
 						return;
 				} else if (slot % 9 > 0 && slot % 9 < 8) {
-					if (event.getClick().equals(ClickType.DOUBLE_CLICK)) {
+					if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
 						onClickItem(e, slot);
 					}
 				}
