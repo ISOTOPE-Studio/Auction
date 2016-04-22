@@ -4,7 +4,7 @@ main: cc.isotopestudio.Auction.Auction
 author: Mars
 description: Auctions
 website: http://isotopestudio.cc
-version: 1.0.0
+version: 1.0.2
 commands:
   Auction:
     description: Auction command

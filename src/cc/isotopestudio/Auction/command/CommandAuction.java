@@ -32,7 +32,7 @@ public class CommandAuction implements CommandExecutor {
 			Player player = (Player) sender;
 			if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
 				if (args[0].equalsIgnoreCase("market")) {
-					(new MarketGUI(0, plugin)).open(player);
+					(new MarketGUI(player, 0, plugin)).open(player);
 					return true;
 				}
 				if (args[0].equalsIgnoreCase("mail")) {

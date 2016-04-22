@@ -23,12 +23,11 @@ import cc.isotopestudio.Auction.utli.S;
 
 public class MailGUI extends GUI implements Listener {
 
-	private final Player player;
 	private final String moneyDisplayName = S.toYellow("金钱");
 
 	public MailGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldDarkGreen(player.getName() + "的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, plugin);
-		this.player = player;
+		super(S.toBoldDarkGreen(player.getName() + "的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, player,
+				plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(9, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));

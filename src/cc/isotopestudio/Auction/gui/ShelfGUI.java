@@ -22,11 +22,8 @@ import cc.isotopestudio.Auction.utli.S;
 
 public class ShelfGUI extends GUI implements Listener {
 
-	private final Player player;
-
 	public ShelfGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldPurple(player.getName() + "的上架商品"), 9, plugin);
-		this.player = player;
+		super(S.toBoldPurple(player.getName() + "的上架商品"), 9, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));

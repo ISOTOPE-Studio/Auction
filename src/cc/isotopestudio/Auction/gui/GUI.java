@@ -28,11 +28,13 @@ public abstract class GUI implements Listener {
 	protected ItemStack[] optionIcons;
 	protected int page;
 	protected HashMap<Integer, Integer> slotIDMap;
-	
-	public GUI(String name, int size, Plugin plugin) {
+	protected final Player player;
+
+	public GUI(String name, int size, Player player, Plugin plugin) {
 		this.name = name;
 		this.size = size;
 		this.plugin = plugin;
+		this.player = player;
 		this.optionNames = new String[size];
 		this.optionIcons = new ItemStack[size];
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -94,7 +96,7 @@ public abstract class GUI implements Listener {
 			}, 2);
 		}
 	}
-	
+
 	private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(name);

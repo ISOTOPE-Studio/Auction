@@ -23,8 +23,9 @@ import cc.isotopestudio.Auction.utli.S;
 
 public class MarketGUI extends GUI implements Listener {
 
-	public MarketGUI(int page, Plugin plugin) {
-		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页"), 9 * 6, plugin);
+	public MarketGUI(Player player, int page, Plugin plugin) {
+		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页") + S.toGray("[" + player.getName()) + "]", 9 * 6, player,
+				plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
@@ -71,16 +72,17 @@ public class MarketGUI extends GUI implements Listener {
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				(new MarketGUI(page + 1, plugin)).open(player);
+				(new MarketGUI(player, page + 1, plugin)).open(player);
 			}
 		}, 2);
 	}
 
 	void onPreviousPage(OptionClickEvent e) {
 		e.setWillClose(true);
+		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
-				(new MarketGUI(page - 1, plugin)).open(e.getPlayer());
+				(new MarketGUI(player, page - 1, plugin)).open(e.getPlayer());
 			}
 		}, 2);
 	}
@@ -90,6 +92,10 @@ public class MarketGUI extends GUI implements Listener {
 		e.setWillClose(true);
 		Player player = e.getPlayer();
 		int index = slotIDMap.get(slot);
+		if (Data.getItem(index, DataLocationType.MARKET) == null) {
+			player.sendMessage(S.toPrefixRed("这个物品已被购买"));
+			return;
+		}
 		if (Data.getOwner(index, DataLocationType.MARKET).equalsIgnoreCase(player.getName())) {
 			player.sendMessage(S.toPrefixRed("不能购买自己的物品，请在展示柜中下架商品"));
 			return;
@@ -103,18 +109,18 @@ public class MarketGUI extends GUI implements Listener {
 		String ownerName = Data.getOwner(index, DataLocationType.MARKET);
 		Data.storeMoneyIntoMail(ownerName, price);
 		if (Bukkit.getPlayer(ownerName) != null) {
-			Bukkit.getPlayer(ownerName).sendMessage(S.toYellow("你的物品被购买，去邮箱中查看！"));
+			Bukkit.getPlayer(ownerName).sendMessage(S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
 		} else {
-			Data.storeMsg(ownerName, S.toYellow("你的物品被购买，去邮箱中查看！"));
+			Data.storeMsg(ownerName, S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
 		}
 		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
 		Data.removeItem(index, DataLocationType.MARKET);
-		player.sendMessage(S.toGreen("成功购买"));
+		player.sendMessage(S.toPrefixGreen("成功购买"));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name)) {
+		if (event.getInventory().getTitle().equals(name) && player.equals(event.getWhoClicked())) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			if (slot < 0 || slot >= size) {

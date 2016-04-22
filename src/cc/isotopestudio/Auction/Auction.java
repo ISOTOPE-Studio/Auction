@@ -21,7 +21,7 @@ import cc.isotopestudio.Auction.sql.MySQL;
 public class Auction extends JavaPlugin {
 	public static final String prefix = (new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD).append("[")
 			.append("ÅÄÂô").append("]").append(ChatColor.GREEN).toString();
-	public static final String pluginName = "Auction";
+	public static final String pluginName = "Auction 1.0.2";
 
 	// mySQL
 	public static MySQL MySQL;
