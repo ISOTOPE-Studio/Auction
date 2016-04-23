@@ -120,7 +120,7 @@ public class MarketGUI extends GUI implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name) && player.equals(event.getWhoClicked())) {
+		if (event.getInventory().getTitle().equals(name) && player.getName().equals(event.getWhoClicked().getName())) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			if (slot < 0 || slot >= size) {

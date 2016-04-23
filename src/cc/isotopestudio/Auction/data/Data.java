@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.sql.SerializeItemStack;
 import cc.isotopestudio.Auction.utli.DataLocationType;
+import cc.isotopestudio.Auction.utli.S;
 
 public class Data {
 
@@ -34,8 +35,8 @@ public class Data {
 		ItemMeta meta = paper.getItemMeta();
 		meta.setDisplayName(moneyName);
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("你出售的物品已被购买!");
-		lore.add("金币: " + money);
+		lore.add(S.toGold("你出售的物品已被购买!"));
+		lore.add(S.toAqua("金币:   ") + S.toGreen("" + money));
 		meta.setLore(lore);
 		paper.setItemMeta(meta);
 		StringBuilder string = new StringBuilder("insert into ");

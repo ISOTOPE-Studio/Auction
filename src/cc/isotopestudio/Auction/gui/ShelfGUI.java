@@ -96,17 +96,15 @@ public class ShelfGUI extends GUI implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
 		if (event.getInventory().getTitle().equals(name)) {
+			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			OptionClickEvent e = null;
 			if (slot < 0) {
-				event.setCancelled(true);
 				return;
 			} else if (slot > 8) {
-				event.setCancelled(true);
 				return;
 			} else if (optionIcons[slot] != null) {
 				e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
-				event.setCancelled(true);
 				if (slot == 0) {
 					if (page > 0)
 						onPreviousPage(e);
