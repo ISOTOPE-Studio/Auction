@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import cc.isotopestudio.Auction.Auction;
+import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
@@ -70,9 +71,9 @@ public class MarketGUI extends GUI implements Listener {
 	void onNextPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new MarketGUI(player, page + 1, plugin)).open(player);
+				(new MarketGUI(player, page + 1, CommandAuction.plugin)).open(player);
 			}
 		}, 2);
 	}
@@ -80,9 +81,9 @@ public class MarketGUI extends GUI implements Listener {
 	void onPreviousPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new MarketGUI(player, page - 1, plugin)).open(e.getPlayer());
+				(new MarketGUI(player, page - 1, CommandAuction.plugin)).open(e.getPlayer());
 			}
 		}, 2);
 	}
@@ -147,11 +148,7 @@ public class MarketGUI extends GUI implements Listener {
 
 				if (e != null && e.willClose()) {
 					final Player p = (Player) event.getWhoClicked();
-					Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-						public void run() {
-							p.closeInventory();
-						}
-					}, 1);
+					p.closeInventory();
 				}
 			}
 		}

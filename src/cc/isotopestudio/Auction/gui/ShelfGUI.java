@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
@@ -68,9 +69,9 @@ public class ShelfGUI extends GUI implements Listener {
 	void onNextPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new ShelfGUI(player, page + 1, plugin)).open(player);
+				(new ShelfGUI(player, page + 1, CommandAuction.plugin)).open(player);
 			}
 		}, 2);
 	}
@@ -78,9 +79,9 @@ public class ShelfGUI extends GUI implements Listener {
 	void onPreviousPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new ShelfGUI(player, page - 1, plugin)).open(player);
+				(new ShelfGUI(player, page - 1, CommandAuction.plugin)).open(player);
 			}
 		}, 2);
 	}
@@ -127,11 +128,7 @@ public class ShelfGUI extends GUI implements Listener {
 			// handler[slot].onOptionClick(e);
 			if (e.willClose()) {
 				final Player p = (Player) event.getWhoClicked();
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-					public void run() {
-						p.closeInventory();
-					}
-				}, 1);
+				p.closeInventory();
 			}
 
 		}

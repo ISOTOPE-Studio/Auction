@@ -12,13 +12,14 @@ import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.gui.MailGUI;
 import cc.isotopestudio.Auction.gui.MarketGUI;
 import cc.isotopestudio.Auction.gui.ShelfGUI;
+import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
 
 public class CommandAuction implements CommandExecutor {
-	private final Auction plugin;
+	public static Auction plugin;
 
 	public CommandAuction(Auction plugin) {
-		this.plugin = plugin;
+		CommandAuction.plugin = plugin;
 	}
 
 	@Override
@@ -46,6 +47,11 @@ public class CommandAuction implements CommandExecutor {
 				try {
 					double price = Double.parseDouble(args[0]);
 					ItemStack item = player.getItemInHand().clone();
+					if (Data.getItemSize(DataLocationType.MARKET, player) >= 20) {
+						player.sendMessage(S.toPrefixRed(
+								"你已经上架了" + Data.getItemSize(DataLocationType.MARKET, player) + "个物品，不能再多了"));
+						return true;
+					}
 					if (item.getType().equals(Material.AIR)) {
 						player.sendMessage(S.toPrefixRed("手中没有物品"));
 						return true;
@@ -59,17 +65,17 @@ public class CommandAuction implements CommandExecutor {
 						}
 					} catch (Exception ex) {
 					}
-					if (price <= 0) {
-						player.sendMessage(S.toPrefixRed("这不是有效的数字请再试"));
+					if (price <= 0 || price > 500000) {
+						player.sendMessage(S.toPrefixRed("这不是有效的数字请再试 (0~500000)"));
 						return true;
 					}
 					player.setItemInHand(null);
 					Data.storeItemIntoMarket(player.getName(), item, price);
-					player.sendMessage(S.toPrefixGreen("成功上架"));
-
+					player.sendMessage(
+							S.toPrefixGreen("成功上架, " + "现在已经上架了" + Data.getItemSize(DataLocationType.MARKET, player))
+									+ "个物品");
 					return true;
 				} catch (Exception e) {
-
 				}
 				sendHelp(player, label);
 				return true;

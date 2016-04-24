@@ -29,6 +29,7 @@ public abstract class GUI implements Listener {
 	protected int page;
 	protected HashMap<Integer, Integer> slotIDMap;
 	protected final Player player;
+	protected boolean isDestoryed = false;
 
 	public GUI(String name, int size, Player player, Plugin plugin) {
 		this.name = name;
@@ -64,6 +65,7 @@ public abstract class GUI implements Listener {
 	}
 
 	public void Destory() {
+		isDestoryed = true;
 		HandlerList.unregisterAll(this);
 		handler = null;
 		plugin = null;
@@ -93,7 +95,7 @@ public abstract class GUI implements Listener {
 				public void run() {
 					Destory();
 				}
-			}, 2);
+			}, 0);
 		}
 	}
 
