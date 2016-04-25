@@ -48,7 +48,10 @@ public class MarketGUI extends GUI implements Listener {
 				lore.add(S.toAqua("售卖:   ") + S.toGreen(Data.getOwner(index, DataLocationType.MARKET)));
 				lore.add(S.toAqua("价格:   ") + S.toGreen(Data.getMarketPrice(index) + ""));
 				lore.add(S.toAqua("剩余:   ") + S.toGreen(Data.getMarketRemainDate(index)));
-				lore.add(S.toYellow("Shift+右键 购买！"));
+				if (player.isOp())
+					lore.add(S.toRed("Shift+右键 下架！"));
+				else
+					lore.add(S.toYellow("Shift+右键 购买！"));
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				setOption(pos, item);
@@ -97,26 +100,38 @@ public class MarketGUI extends GUI implements Listener {
 			player.sendMessage(S.toPrefixRed("这个物品已被购买"));
 			return;
 		}
-		if (Data.getOwner(index, DataLocationType.MARKET).equalsIgnoreCase(player.getName())) {
-			player.sendMessage(S.toPrefixRed("不能购买自己的物品，请在展示柜中下架商品"));
-			return;
-		}
-		double price = Data.getMarketPrice(index);
-		if (price > Auction.econ.getBalance(player.getName())) {
-			player.sendMessage(S.toPrefixRed("余额不足"));
-			return;
-		}
-		Auction.econ.withdrawPlayer(player.getName(), price);
-		String ownerName = Data.getOwner(index, DataLocationType.MARKET);
-		Data.storeMoneyIntoMail(ownerName, price);
-		if (Bukkit.getPlayer(ownerName) != null) {
-			Bukkit.getPlayer(ownerName).sendMessage(S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
+		if (player.isOp()) {
+			String ownerName = Data.getOwner(index, DataLocationType.MARKET);
+			if (Bukkit.getPlayer(ownerName) != null) {
+				Bukkit.getPlayer(ownerName).sendMessage(S.toPrefixYellow("你的物品被管理员下架，去邮箱中查看！"));
+			} else {
+				Data.storeMsg(ownerName, S.toPrefixYellow("你的物品被管理员下架，去邮箱中查看！"));
+			}
+			Data.storeItemIntoMail(ownerName, Data.getItem(index, DataLocationType.MARKET));
+			Data.removeItem(index, DataLocationType.MARKET);
+			player.sendMessage(S.toPrefixGreen("成功下架"));
 		} else {
-			Data.storeMsg(ownerName, S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
+			if (Data.getOwner(index, DataLocationType.MARKET).equalsIgnoreCase(player.getName())) {
+				player.sendMessage(S.toPrefixRed("不能购买自己的物品，请在展示柜中下架商品"));
+				return;
+			}
+			double price = Data.getMarketPrice(index);
+			if (price > Auction.econ.getBalance(player.getName())) {
+				player.sendMessage(S.toPrefixRed("余额不足"));
+				return;
+			}
+			Auction.econ.withdrawPlayer(player.getName(), price);
+			String ownerName = Data.getOwner(index, DataLocationType.MARKET);
+			Data.storeMoneyIntoMail(ownerName, player.getName(), price);
+			if (Bukkit.getPlayer(ownerName) != null) {
+				Bukkit.getPlayer(ownerName).sendMessage(S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
+			} else {
+				Data.storeMsg(ownerName, S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));
+			}
+			Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
+			Data.removeItem(index, DataLocationType.MARKET);
+			player.sendMessage(S.toPrefixGreen("成功购买"));
 		}
-		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));
-		Data.removeItem(index, DataLocationType.MARKET);
-		player.sendMessage(S.toPrefixGreen("成功购买"));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

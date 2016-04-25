@@ -22,7 +22,7 @@ import cc.isotopestudio.Auction.sql.MySQL;
 public class Auction extends JavaPlugin {
 	public static final String prefix = (new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD).append("[")
 			.append("ÅÄÂô").append("]").append(ChatColor.GREEN).toString();
-	public static final String pluginName = "Auction 1.0.2";
+	public static final String pluginName = "Auction 1.1";
 
 	// mySQL
 	public static MySQL MySQL;
@@ -66,7 +66,8 @@ public class Auction extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 
 		pm.registerEvents(new PlayerJoinMsg(this), this);
-		pm.registerEvents(new SafeListener(), this);
+		if (getConfig().getBoolean("check", false))
+			pm.registerEvents(new SafeListener(), this);
 		this.getCommand("auction").setExecutor(new CommandAuction(this));
 
 		(new ClearOutdatedItem()).runTaskTimer(this, 60, 20 * 60);

@@ -30,12 +30,13 @@ public class Data {
 		}
 	}
 
-	public static void storeMoneyIntoMail(String playerName, double money) {
+	public static void storeMoneyIntoMail(String playerName, String buyer, double money) {
 		ItemStack paper = new ItemStack(Material.PAPER);
 		ItemMeta meta = paper.getItemMeta();
 		meta.setDisplayName(moneyName);
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(S.toGold("你出售的物品已被购买!"));
+		lore.add(S.toGold("你出售的物品"));
+		lore.add(S.toGold("已被 " + buyer + " 购买!"));
 		lore.add(S.toAqua("金币:   ") + S.toGreen("" + money));
 		meta.setLore(lore);
 		paper.setItemMeta(meta);

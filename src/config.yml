@@ -4,4 +4,4 @@ mySQL:
   user: root
   password: root
   database: auction
-
+check: true
