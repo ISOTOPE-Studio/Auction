@@ -29,6 +29,7 @@ public abstract class GUI implements Listener {
 	protected int page;
 	protected HashMap<Integer, Integer> slotIDMap;
 	protected final Player player;
+	protected final String playerName;
 	protected boolean isDestoryed = false;
 
 	public GUI(String name, int size, Player player, Plugin plugin) {
@@ -36,6 +37,7 @@ public abstract class GUI implements Listener {
 		this.size = size;
 		this.plugin = plugin;
 		this.player = player;
+		playerName = player.getName();
 		this.optionNames = new String[size];
 		this.optionIcons = new ItemStack[size];
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -90,7 +92,7 @@ public abstract class GUI implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if (event.getInventory().getTitle().equals(name)) {
+		if (event.getInventory().getTitle().equals(name) && playerName.equals(event.getPlayer().getName())) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				public void run() {
 					Destory();

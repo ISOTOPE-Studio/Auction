@@ -25,8 +25,8 @@ import cc.isotopestudio.Auction.utli.S;
 public class MarketGUI extends GUI implements Listener {
 
 	public MarketGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页") + S.toGray("[" + player.getName()) + "]", 9 * 6, player,
-				plugin);
+		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1)
+				+ " 页") /* + S.toGray("[" + player.getName()) + "]" */, 9 * 6, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
@@ -136,7 +136,7 @@ public class MarketGUI extends GUI implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name) && player.getName().equals(event.getWhoClicked().getName())) {
+		if (event.getInventory().getTitle().equals(name) && playerName.equals(event.getWhoClicked().getName())) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			if (slot < 0 || slot >= size) {

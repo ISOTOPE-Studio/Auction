@@ -26,7 +26,7 @@ public class SafeListener implements Listener {
 	@EventHandler
 	public void onClickInventory(InventoryClickEvent event) {
 		Inventory inv = event.getInventory();
-		if (inv.getTitle().contains(event.getWhoClicked().getName() + "的") || inv.getTitle().contains("全球市场"))
+		if (inv.getTitle().contains("你的邮箱 ") || inv.getTitle().contains("你的上架商品 ") || inv.getTitle().contains("全球市场"))
 			return;
 		for (int i = 0; i < inv.getContents().length; i++) {
 			ItemStack item = inv.getContents()[i];

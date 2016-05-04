@@ -27,7 +27,7 @@ public class MailGUI extends GUI implements Listener {
 	private final String moneyDisplayName = S.toYellow("金钱");
 
 	public MailGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldDarkGreen(player.getName() + "的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, player,
+		super(S.toBoldDarkGreen(/* player.getName() + */"你的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, player,
 				plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
@@ -118,12 +118,16 @@ public class MailGUI extends GUI implements Listener {
 			player.sendMessage(S.toPrefixGreen("物品已存放至背包"));
 		}
 		Data.removeItem(index, DataLocationType.MAIL);
-
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
+			public void run() {
+				(new MailGUI(player, page, CommandAuction.plugin)).open(player);
+			}
+		}, 2);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name)) {
+		if (event.getInventory().getTitle().equals(name) && playerName.equals(event.getWhoClicked().getName())) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			if (slot < 0 || slot >= size) {

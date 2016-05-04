@@ -24,7 +24,7 @@ import cc.isotopestudio.Auction.utli.S;
 public class ShelfGUI extends GUI implements Listener {
 
 	public ShelfGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldPurple(player.getName() + "的上架商品"), 9, player, plugin);
+		super(S.toBoldPurple(/* player.getName() + */"你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
@@ -96,7 +96,7 @@ public class ShelfGUI extends GUI implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(final InventoryClickEvent event) {
-		if (event.getInventory().getTitle().equals(name)) {
+		if (event.getInventory().getTitle().equals(name) && playerName.equals(event.getWhoClicked().getName())) {
 			event.setCancelled(true);
 			int slot = event.getRawSlot();
 			OptionClickEvent e = null;
