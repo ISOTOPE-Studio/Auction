@@ -209,56 +209,6 @@ public class Data {
 		return day + "天" + hour + "小时" + min + "分";
 	}
 
-	public static ResultSet getPlayerItemList(Player player, DataLocationType type) {
-		ResultSet res = null;
-		try {
-			if (type.equals(DataLocationType.MAIL)) {
-				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
-			} else if (type.equals(DataLocationType.MARKET)) {
-				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
-			}
-			return res;
-		} catch (SQLException e) {
-
-		}
-		return null;
-	}
-
-	public static int getItemSizeID(DataLocationType type) {
-		ResultSet res = null;
-		try {
-			if (type.equals(DataLocationType.MAIL)) {
-				res = Auction.statement.executeQuery("select * from mail;");
-			} else if (type.equals(DataLocationType.MARKET)) {
-				res = Auction.statement.executeQuery("select * from market;");
-			}
-			if (res.wasNull()) {
-				return -1;
-			}
-			res.last();
-			return res.getInt("id");
-		} catch (SQLException e) {
-
-		}
-		return 0;
-	}
-
-	public static int getItemSizeID(DataLocationType type, Player player) {
-		ResultSet res = null;
-		try {
-			if (type.equals(DataLocationType.MAIL)) {
-				res = Auction.statement.executeQuery("select * from mail where owner=\"" + player.getName() + "\";");
-			} else if (type.equals(DataLocationType.MARKET)) {
-				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
-			}
-			res.last();
-			return res.getInt("id");
-		} catch (SQLException e) {
-
-		}
-		return 0;
-	}
-
 	public static int getItemSize(DataLocationType type) {
 		ResultSet res = null;
 		try {
@@ -304,7 +254,8 @@ public class Data {
 		return 0;
 	}
 
-	public static int getRowID(DataLocationType type, Player player, int count) {
+	public static ArrayList<Integer> getResult(DataLocationType type, Player player, int prerun, int limit) {
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		ResultSet res = null;
 		try {
 			if (type.equals(DataLocationType.MAIL)) {
@@ -312,13 +263,17 @@ public class Data {
 			} else if (type.equals(DataLocationType.MARKET)) {
 				res = Auction.statement.executeQuery("select * from market where owner=\"" + player.getName() + "\";");
 			}
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < prerun; i++)
 				res.next();
-			return res.getInt("id");
+			int count = 0;
+			while (res.next() && count < limit) {
+				count++;
+				result.add(res.getInt("id"));
+			}
+			return result;
 		} catch (SQLException e) {
-
 		}
-		return 0;
+		return null;
 	}
 
 }

@@ -25,8 +25,7 @@ import cc.isotopestudio.Auction.utli.S;
 public class MarketGUI extends GUI implements Listener {
 
 	public MarketGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldDarkAqua("全球市场  第 " + (page + 1)
-				+ " 页") /* + S.toGray("[" + player.getName()) + "]" */, 9 * 6, player, plugin);
+		super(getName(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页")), 9 * 6, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));

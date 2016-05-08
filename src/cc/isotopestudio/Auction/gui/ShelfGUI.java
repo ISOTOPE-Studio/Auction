@@ -24,19 +24,19 @@ import cc.isotopestudio.Auction.utli.S;
 public class ShelfGUI extends GUI implements Listener {
 
 	public ShelfGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldPurple(/* player.getName() + */"你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9, player, plugin);
+		super(getName(S.toBoldPurple("你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
 		setOption(8, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
-		int size = Data.getItemSizeID(DataLocationType.MARKET);
-		int index = Data.getRowID(DataLocationType.MARKET, player, page * 1 * 7 + 1) - 1;
+		int index = -1;
 		int pos = 1;
-		while (index <= size && pos < 8) {
-			index++;
-			if (!Data.getOwner(index, DataLocationType.MARKET).equals(player.getName())) {
-				continue;
-			}
+		final int prerun = page * 7;
+		ArrayList<Integer> indexList = Data.getResult(DataLocationType.MARKET, player, prerun, 7);
+		int count = 0;
+		while (count < indexList.size() && pos < 8) {
+			index = indexList.get(count);
+			count++;
 			ItemStack item = Data.getItem(index, DataLocationType.MARKET);
 			if (item == null) {
 				continue;

@@ -31,6 +31,7 @@ public class CommandAuction implements CommandExecutor {
 				return true;
 			}
 			Player player = (Player) sender;
+
 			if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
 				if (args[0].equalsIgnoreCase("market")) {
 					(new MarketGUI(player, 0, plugin)).open(player);
@@ -42,6 +43,12 @@ public class CommandAuction implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("shelf")) {
 					(new ShelfGUI(player, 0, plugin)).open(player);
+					return true;
+				}
+				if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("about")) {
+					player.sendMessage(S.toPrefixGreen("此服务器的定制插件 - Auction | 拍卖"));
+					player.sendMessage(S.toPrefixYellow("由ISOTOPE Studio(Mars Tan)制作"));
+					player.sendMessage(S.toPrefixGray("http://www.isotopestudio.cc/minecraft.html"));
 					return true;
 				}
 				try {
@@ -65,8 +72,8 @@ public class CommandAuction implements CommandExecutor {
 						}
 					} catch (Exception ex) {
 					}
-					if (price <= 0 || price > 500000) {
-						player.sendMessage(S.toPrefixRed("这不是有效的数字请再试 (0~500000)"));
+					if (price <= 0 || price > 10000000) {
+						player.sendMessage(S.toPrefixRed("这不是有效的数字请再试 (0~10000000)"));
 						return true;
 					}
 					player.setItemInHand(null);
@@ -96,6 +103,7 @@ public class CommandAuction implements CommandExecutor {
 		player.sendMessage(S.toGold("这里查看你的邮件"));
 		player.sendMessage(S.toBoldGreen("/" + label + " shelf 查看玩家上架的商品"));
 		player.sendMessage(S.toGold("这里能上架/下架你拍卖的物品"));
+		player.sendMessage(S.toBoldGreen("/" + label + " info 查看插件信息"));
 	}
 
 }

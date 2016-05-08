@@ -1,5 +1,6 @@
 package cc.isotopestudio.Auction.gui;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,20 +28,19 @@ public class MailGUI extends GUI implements Listener {
 	private final String moneyDisplayName = S.toYellow("金钱");
 
 	public MailGUI(Player player, int page, Plugin plugin) {
-		super(S.toBoldDarkGreen(/* player.getName() + */"你的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页"), 9 * 3, player,
-				plugin);
+		super(getName(S.toBoldDarkGreen("你的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9 * 3, player, plugin);
 		this.page = page;
 		slotIDMap = new HashMap<Integer, Integer>();
 		setOption(9, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
 		setOption(17, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
-		int size = Data.getItemSizeID(DataLocationType.MAIL);
-		int index = Data.getRowID(DataLocationType.MAIL, player, page * 3 * 7 + 1) - 1;
+		int index = -1;
 		int pos = 1;
-		while (index <= size && pos < 26) {
-			index++;
-			if (!Data.getOwner(index, DataLocationType.MAIL).equals(player.getName())) {
-				continue;
-			}
+		final int prerun = page * 3 * 7;
+		ArrayList<Integer> indexList = Data.getResult(DataLocationType.MAIL, player, prerun, 7 * 3);
+		int count = 0;
+		while (count < indexList.size() && pos < 26) {
+			index = indexList.get(count);
+			count++;
 			ItemStack item = Data.getItem(index, DataLocationType.MAIL);
 			if (item == null) {
 				continue;
@@ -79,7 +79,7 @@ public class MailGUI extends GUI implements Listener {
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new MailGUI(player, page + 1, CommandAuction.plugin)).open(player);
+				new MailGUI(player, page + 1, CommandAuction.plugin).open(player);
 			}
 		}, 2);
 	}
@@ -89,7 +89,7 @@ public class MailGUI extends GUI implements Listener {
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
-				(new MailGUI(player, page - 1, CommandAuction.plugin)).open(player);
+				new MailGUI(player, page - 1, CommandAuction.plugin).open(player);
 			}
 		}, 2);
 	}
@@ -97,9 +97,18 @@ public class MailGUI extends GUI implements Listener {
 	@SuppressWarnings("deprecation")
 	void onClickItem(OptionClickEvent e, int slot) {
 		e.setWillClose(true);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
+			public void run() {
+				new MailGUI(player, page, CommandAuction.plugin).open(player);
+			}
+		}, 3);
 		Player player = e.getPlayer();
 		int index = slotIDMap.get(slot);
 		ItemStack item = Data.getItem(index, DataLocationType.MAIL);
+		if (item == null) {
+			player.sendMessage(S.toPrefixRed("物品消失了额"));
+			return;
+		}
 		boolean isMoney = false;
 		try {
 			isMoney = item.getItemMeta().getDisplayName().equals(Data.moneyName);
@@ -118,11 +127,6 @@ public class MailGUI extends GUI implements Listener {
 			player.sendMessage(S.toPrefixGreen("物品已存放至背包"));
 		}
 		Data.removeItem(index, DataLocationType.MAIL);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
-			public void run() {
-				(new MailGUI(player, page, CommandAuction.plugin)).open(player);
-			}
-		}, 2);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

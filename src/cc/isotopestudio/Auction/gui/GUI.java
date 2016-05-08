@@ -1,5 +1,6 @@
 package cc.isotopestudio.Auction.gui;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -20,8 +21,8 @@ public abstract class GUI implements Listener {
 
 	// From: https://bukkit.org/threads/icon-menu.108342
 
-	protected String name;
-	protected int size;
+	protected final String name;
+	protected final int size;
 	protected OptionClickEventHandler[] handler;
 	protected Plugin plugin;
 	protected String[] optionNames;
@@ -107,6 +108,34 @@ public abstract class GUI implements Listener {
 		im.setLore(Arrays.asList(lore));
 		item.setItemMeta(im);
 		return item;
+	}
+
+	public static String getName(String a) {
+		for (int i = 0; i <= 5; i++) {
+			switch ((int) (Math.random() * 5)) {
+			case (0): {
+				a += "¡ìf";
+				break;
+			}
+			case (1): {
+				a += "¡ì1";
+				break;
+			}
+			case (2): {
+				a += "¡ì2";
+				break;
+			}
+			case (3): {
+				a += "¡ì3";
+				break;
+			}
+			case (4): {
+				a += "¡ì4";
+				break;
+			}
+			}
+		}
+		return a;
 	}
 
 	public interface OptionClickEventHandler {

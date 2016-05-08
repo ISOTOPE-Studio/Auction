@@ -1,7 +1,8 @@
 package cc.isotopestudio.Auction.utli;
 
+import org.bukkit.ChatColor;
+
 import cc.isotopestudio.Auction.Auction;
-import net.md_5.bungee.api.ChatColor;
 
 public class S {
 
@@ -59,5 +60,9 @@ public class S {
 
 	public static String toPrefixYellow(String s) {
 		return new StringBuilder(Auction.prefix).append(ChatColor.YELLOW).append(s).toString();
+	}
+
+	public static String toPrefixGray(String s) {
+		return new StringBuilder(Auction.prefix).append(ChatColor.GRAY).append(s).toString();
 	}
 }
