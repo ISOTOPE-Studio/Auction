@@ -15,7 +15,7 @@ public class ClearOutdatedItem extends BukkitRunnable {
 		while (true) {
 			index = Data.getMarketRowID(1);
 			if (index > 0 && Data.getMarketRemainDate(index).equals("timeout")) {
-				String playerName = Data.getOwner(index, DataLocationType.MARKET);
+				String playerName = Data.getMarketOwner(index);
 				if (Bukkit.getPlayer(playerName) != null) {
 					Bukkit.getPlayer(playerName).sendMessage(S.toPrefixYellow("你的物品已超时，请在邮箱中查看"));
 				} else {

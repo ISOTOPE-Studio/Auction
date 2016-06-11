@@ -12,15 +12,15 @@ import java.sql.Statement;
  * @author -_Husky_-
  * @author tips48
  */
-public abstract class Database {
+abstract class Database {
 
-	protected Connection connection;
+	Connection connection;
 
 	/**
 	 * Creates a new Database
 	 *
 	 */
-	protected Database() {
+	Database() {
 		this.connection = null;
 	}
 
@@ -33,7 +33,7 @@ public abstract class Database {
 	 * @throws ClassNotFoundException
 	 *             if the driver cannot be found
 	 */
-	public abstract Connection openConnection() throws SQLException, ClassNotFoundException;
+	protected abstract Connection openConnection() throws SQLException, ClassNotFoundException;
 
 	/**
 	 * Checks if a connection is open with the database
@@ -42,7 +42,7 @@ public abstract class Database {
 	 * @throws SQLException
 	 *             if the connection cannot be checked
 	 */
-	public boolean checkConnection() throws SQLException {
+	boolean checkConnection() throws SQLException {
 		return connection != null && !connection.isClosed();
 	}
 
@@ -90,9 +90,7 @@ public abstract class Database {
 
 		Statement statement = connection.createStatement();
 
-		ResultSet result = statement.executeQuery(query);
-
-		return result;
+		return statement.executeQuery(query);
 	}
 
 	/**
@@ -115,8 +113,6 @@ public abstract class Database {
 
 		Statement statement = connection.createStatement();
 
-		int result = statement.executeUpdate(query);
-
-		return result;
+		return statement.executeUpdate(query);
 	}
 }

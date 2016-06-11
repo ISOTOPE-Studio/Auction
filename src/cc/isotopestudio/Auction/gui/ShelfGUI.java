@@ -26,7 +26,7 @@ public class ShelfGUI extends GUI implements Listener {
 	public ShelfGUI(Player player, int page, Plugin plugin) {
 		super(getName(S.toBoldPurple("你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9, player, plugin);
 		this.page = page;
-		slotIDMap = new HashMap<Integer, Integer>();
+		slotIDMap = new HashMap<>();
 		setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
 		setOption(8, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
 		int index = -1;
@@ -42,7 +42,7 @@ public class ShelfGUI extends GUI implements Listener {
 				continue;
 			} else {
 				ItemMeta meta = item.getItemMeta();
-				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
+				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 				lore.add(S.toGray("-------- (" + index + ") --------"));
 				lore.add(S.toAqua("价格:   ") + S.toGreen(Data.getMarketPrice(index) + ""));
 				lore.add(S.toAqua("剩余:   ") + S.toGreen(Data.getMarketRemainDate(index)));
@@ -58,7 +58,7 @@ public class ShelfGUI extends GUI implements Listener {
 		}
 	}
 
-	int getTotalPage() {
+	private int getTotalPage() {
 		int size = Data.getItemSize(DataLocationType.MARKET, player);
 		int page = size / (7 * 1);
 		if (size % (7 * 1) != 0)
@@ -66,7 +66,7 @@ public class ShelfGUI extends GUI implements Listener {
 		return page;
 	}
 
-	void onNextPage(OptionClickEvent e) {
+	private void onNextPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
@@ -76,7 +76,7 @@ public class ShelfGUI extends GUI implements Listener {
 		}, 2);
 	}
 
-	void onPreviousPage(OptionClickEvent e) {
+	private void onPreviousPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
@@ -86,7 +86,7 @@ public class ShelfGUI extends GUI implements Listener {
 		}, 2);
 	}
 
-	void onUnshelfItem(OptionClickEvent e, int slot) {
+	private void onUnshelfItem(OptionClickEvent e, int slot) {
 		e.setWillClose(true);
 		int index = slotIDMap.get(slot);
 		Data.storeItemIntoMail(player.getName(), Data.getItem(index, DataLocationType.MARKET));

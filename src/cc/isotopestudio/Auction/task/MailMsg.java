@@ -15,7 +15,7 @@ public class MailMsg extends BukkitRunnable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		for (Player player : (List<Player>) Bukkit.getOnlinePlayers()) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			runForPlayer(player);
 		}
 

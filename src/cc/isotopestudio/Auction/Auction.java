@@ -32,9 +32,9 @@ public class Auction extends JavaPlugin {
 	// Vault
 	public static Economy econ = null;
 
-	public void createFile(String name) {
+	private void createFile() {
 		File file;
-		file = new File(getDataFolder(), name + ".yml");
+		file = new File(getDataFolder(), "config" + ".yml");
 		if (!file.exists()) {
 			saveDefaultConfig();
 		}
@@ -52,13 +52,13 @@ public class Auction extends JavaPlugin {
 
 		getLogger().info("加载配置文件中");
 
-		createFile("config");
-		if (SqlManager.connectMySQL(this) == false) {
+		createFile();
+		if (!SqlManager.connectMySQL(this)) {
 			getLogger().severe(pluginName + "无法加载!");
 			getLogger().severe("数据库无法连接！");
 			this.getPluginLoader().disablePlugin(this);
 		}
-		if (SqlManager.createTables(this) == false) {
+		if (!SqlManager.createTables(this)) {
 			getLogger().severe(pluginName + "无法加载!");
 			getLogger().severe("数据库创建失败！");
 			this.getPluginLoader().disablePlugin(this);

@@ -1,6 +1,5 @@
 package cc.isotopestudio.Auction.gui;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class MailGUI extends GUI implements Listener {
 	public MailGUI(Player player, int page, Plugin plugin) {
 		super(getName(S.toBoldDarkGreen("你的邮箱 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9 * 3, player, plugin);
 		this.page = page;
-		slotIDMap = new HashMap<Integer, Integer>();
+		slotIDMap = new HashMap<>();
 		setOption(9, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
 		setOption(17, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
 		int index = -1;
@@ -50,9 +49,9 @@ public class MailGUI extends GUI implements Listener {
 					if (meta.getDisplayName().equals(Data.moneyName)) {
 						meta.setDisplayName(moneyDisplayName);
 					}
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
-				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<String>();
+				List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 				lore.add(S.toGray("-------- (" + index + ") --------"));
 				lore.add(S.toYellow("Shift+右键 取回！"));
 				meta.setLore(lore);
@@ -66,7 +65,7 @@ public class MailGUI extends GUI implements Listener {
 		}
 	}
 
-	int getTotalPage() {
+	private int getTotalPage() {
 		int size = Data.getItemSize(DataLocationType.MAIL, player);
 		int page = size / (7 * 3);
 		if (size % (7 * 3) != 0)
@@ -74,7 +73,7 @@ public class MailGUI extends GUI implements Listener {
 		return page;
 	}
 
-	void onNextPage(OptionClickEvent e) {
+	private void onNextPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
@@ -84,7 +83,7 @@ public class MailGUI extends GUI implements Listener {
 		}, 2);
 	}
 
-	void onPreviousPage(OptionClickEvent e) {
+	private void onPreviousPage(OptionClickEvent e) {
 		e.setWillClose(true);
 		final Player player = e.getPlayer();
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
@@ -95,7 +94,7 @@ public class MailGUI extends GUI implements Listener {
 	}
 
 	@SuppressWarnings("deprecation")
-	void onClickItem(OptionClickEvent e, int slot) {
+	private void onClickItem(OptionClickEvent e, int slot) {
 		e.setWillClose(true);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
 			public void run() {
@@ -112,7 +111,7 @@ public class MailGUI extends GUI implements Listener {
 		boolean isMoney = false;
 		try {
 			isMoney = item.getItemMeta().getDisplayName().equals(Data.moneyName);
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		}
 		if (isMoney) {
 			double money = Data.getMailMoney(index);
