@@ -36,7 +36,10 @@ public class Data {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(S.toGold("你出售的物品"));
         lore.add(S.toGold("已被 " + buyer + " 购买!"));
-        lore.add(S.toAqua("金币:   ") + S.toGreen("" + money));
+        if (money > 0)
+            lore.add(S.toAqua("金币:   ") + S.toGreen("" + money));
+        else
+            lore.add(S.toAqua("点卷:   ") + S.toGreen("" + -money));
         meta.setLore(lore);
         paper.setItemMeta(meta);
         StringBuilder string = new StringBuilder("insert into ");

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static cc.isotopestudio.Auction.Auction.playerPoints;
+
 public class MarketGUI extends GUI implements Listener {
 
     public MarketGUI(Player player, int page, Plugin plugin) {
@@ -118,13 +120,19 @@ public class MarketGUI extends GUI implements Listener {
                 player.sendMessage(S.toPrefixRed("不能购买自己的物品，请在展示柜中下架商品"));
                 return;
             }
+            String ownerName = Data.getMarketOwner(index);
             double price = Data.getMarketPrice(index);
-            if (price > Auction.econ.getBalance(player.getName())) {
+            if (price < 0) {
+                if (!playerPoints.getAPI().take(playerName, (int) -price)) {
+                    player.sendMessage(S.toPrefixRed("余额不足"));
+                    return;
+                }
+            } else if (price > Auction.econ.getBalance(player.getName())) {
                 player.sendMessage(S.toPrefixRed("余额不足"));
                 return;
+            } else {
+                Auction.econ.withdrawPlayer(player.getName(), price);
             }
-            Auction.econ.withdrawPlayer(player.getName(), price);
-            String ownerName = Data.getMarketOwner(index);
             Data.storeMoneyIntoMail(ownerName, player.getName(), price);
             if (Bukkit.getPlayer(ownerName) != null) {
                 Bukkit.getPlayer(ownerName).sendMessage(S.toPrefixYellow("你的物品被购买，去邮箱中查看！"));

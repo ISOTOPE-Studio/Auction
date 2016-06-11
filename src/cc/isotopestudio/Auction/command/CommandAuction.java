@@ -72,7 +72,7 @@ public class CommandAuction implements CommandExecutor {
                     }
                     double price;
                     if (args[0].startsWith("p")) {
-                        price = Double.parseDouble(args[0].substring(1));
+                        price = Integer.parseInt(args[0].substring(1));
                         Data.storeItemIntoMarket(player.getName(), item, -price);
                     } else {
                         price = Double.parseDouble(args[0]);
@@ -101,7 +101,8 @@ public class CommandAuction implements CommandExecutor {
 
     private void sendHelp(CommandSender player, String label) {
         player.sendMessage(S.toPrefixGreen("帮助菜单"));
-        player.sendMessage(S.toBoldGreen("/" + label + " <价格> 上架商品"));
+        player.sendMessage(S.toBoldGreen("/" + label + " <价格> 上架商品(货币: 游戏币)"));
+        player.sendMessage(S.toBoldGreen("/" + label + " p<价格> 上架商品(货币: 点卷)"));
         player.sendMessage(S.toBoldGreen("/" + label + " market 查看拍卖行"));
         player.sendMessage(S.toGold("这里能购买(双击)所有人拍卖的物品"));
         player.sendMessage(S.toBoldGreen("/" + label + " mail 查看玩家邮箱"));
