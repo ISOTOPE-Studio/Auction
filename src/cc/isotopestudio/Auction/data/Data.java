@@ -240,7 +240,7 @@ public class Data {
     }
 
     public static int getMarketRowID(int count) {
-        ResultSet res = null;
+        ResultSet res;
         try {
             res = Auction.statement.executeQuery("select * from market;");
             for (int i = 0; i < count; i++)
@@ -248,6 +248,17 @@ public class Data {
             return res.getInt("id");
         } catch (SQLException ignored) {
 
+        }
+        return 0;
+    }
+
+    public static int getMarketMinID() {
+        ResultSet res;
+        try {
+            res = Auction.statement.executeQuery("select * from market;");
+            res.next();
+            return res.getInt("id");
+        } catch (SQLException ignored) {
         }
         return 0;
     }

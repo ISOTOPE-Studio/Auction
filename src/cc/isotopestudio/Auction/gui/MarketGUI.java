@@ -36,7 +36,8 @@ public class MarketGUI extends GUI implements Listener {
         int size = Data.getItemSize(DataLocationType.MARKET);
         int index = Data.getMarketRowID(size - page * 6 * 7) + 1;
         int pos = 1;
-        while (index > 0 && pos < 53) {
+        final int min = Data.getMarketMinID();
+        while (index >= min && pos < 53) {
             index--;
             ItemStack item = Data.getItem(index, DataLocationType.MARKET);
             if (item == null) {

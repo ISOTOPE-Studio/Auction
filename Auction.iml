@@ -30,7 +30,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../Spigot/server/plugins/PlayerPoints.jar!/" />
+          <root url="jar://$USER_HOME$/Documents/Minecraft Servers/1.8.8/plugins/PlayerPoints.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

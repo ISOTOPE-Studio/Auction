@@ -22,7 +22,7 @@ import java.sql.Statement;
 public class Auction extends JavaPlugin {
 	public static final String prefix = (new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD).append("[")
 			.append("ÅÄÂô").append("]").append(ChatColor.GREEN).toString();
-	public static final String pluginName = "Auction 1.2.4";
+	public static final String pluginName = "Auction 1.2.5";
 
 	// mySQL
 	public static MySQL MySQL;
