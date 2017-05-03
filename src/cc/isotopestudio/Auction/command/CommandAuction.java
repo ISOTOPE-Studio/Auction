@@ -1,10 +1,10 @@
 package cc.isotopestudio.Auction.command;
 
-import cc.isotopestudio.Auction.Auction;
 import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.gui.MailGUI;
 import cc.isotopestudio.Auction.gui.MarketGUI;
 import cc.isotopestudio.Auction.gui.ShelfGUI;
+import cc.isotopestudio.Auction.settings.Settings;
 import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
 import org.bukkit.Material;
@@ -15,11 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class CommandAuction implements CommandExecutor {
-    public static Auction plugin;
-
-    public CommandAuction(Auction plugin) {
-        CommandAuction.plugin = plugin;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -33,15 +28,15 @@ public class CommandAuction implements CommandExecutor {
 
             if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
                 if (args[0].equalsIgnoreCase("market")) {
-                    (new MarketGUI(player, 0, plugin)).open(player);
+                    (new MarketGUI(player, 0)).open(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("mail")) {
-                    (new MailGUI(player, 0, plugin)).open(player);
+                    (new MailGUI(player, 0)).open(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("shelf")) {
-                    (new ShelfGUI(player, 0, plugin)).open(player);
+                    (new ShelfGUI(player, 0)).open(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("about")) {
@@ -61,14 +56,9 @@ public class CommandAuction implements CommandExecutor {
                         player.sendMessage(S.toPrefixRed("手中没有物品"));
                         return true;
                     }
-                    try {
-                        for (String lore : item.getItemMeta().getLore()) {
-                            if (lore.contains("绑定")) {
-                                player.sendMessage(S.toPrefixRed("无法上架绑定的道具"));
-                                return true;
-                            }
-                        }
-                    } catch (Exception ignored) {
+                    if (Settings.isBlocked(item)) {
+                        player.sendMessage(S.toPrefixRed("此物品无法上架"));
+                        return true;
                     }
                     double price;
                     if (args[0].startsWith("p")) {

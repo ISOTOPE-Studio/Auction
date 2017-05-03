@@ -75,7 +75,7 @@ public class Data {
     }
 
     public static ArrayList<String> getMsg(String PlayerName) {
-        ResultSet res = null;
+        ResultSet res;
         ArrayList<String> result;
         try {
             res = Auction.statement.executeQuery("select * from msg where player=\"" + PlayerName + "\";");
@@ -134,7 +134,7 @@ public class Data {
     }
 
     public static String getMarketOwner(int id) {
-        ResultSet res = null;
+        ResultSet res;
         try {
             res = Auction.statement.executeQuery("select * from market where id=" + id + ";");
 
@@ -148,7 +148,7 @@ public class Data {
     }
 
     public static double getMarketPrice(int id) {
-        ResultSet res = null;
+        ResultSet res;
         try {
             res = Auction.statement.executeQuery("select * from market where id=" + id + ";");
             if (!res.next())
@@ -161,7 +161,7 @@ public class Data {
     }
 
     public static double getMailMoney(int id) {
-        ResultSet res = null;
+        ResultSet res;
         try {
             res = Auction.statement.executeQuery("select * from mail where id=" + id + ";");
             if (!res.next())
@@ -190,9 +190,9 @@ public class Data {
         Date time = getMarketDate(id);
         Date now = new Date();
         time.setTime(time.getTime() + 7 * 24 * 60 * 60 * 1000);
-        long day = 0;
-        long hour = 0;
-        long min = 0;
+        long day;
+        long hour;
+        long min;
         long time1 = time.getTime();
         long time2 = now.getTime();
         long diff;
@@ -279,10 +279,9 @@ public class Data {
                 count++;
                 result.add(res.getInt("id"));
             }
-            return result;
         } catch (SQLException ignored) {
         }
-        return null;
+        return result;
     }
 
 }

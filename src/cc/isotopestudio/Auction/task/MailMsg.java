@@ -1,7 +1,6 @@
 package cc.isotopestudio.Auction.task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

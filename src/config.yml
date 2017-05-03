@@ -5,3 +5,9 @@ mySQL:
   password: root
   database: auction
 check: true
+blacklist:
+  item:
+  - STONE
+  - DIRT
+  lore:
+  - "&cπ‹¿Ì‘±"

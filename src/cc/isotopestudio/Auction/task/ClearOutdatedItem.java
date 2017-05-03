@@ -11,7 +11,7 @@ public class ClearOutdatedItem extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		int index = Data.getMarketRowID(1);
+		int index;
 		while (true) {
 			index = Data.getMarketRowID(1);
 			if (index > 0 && Data.getMarketRemainDate(index).equals("timeout")) {

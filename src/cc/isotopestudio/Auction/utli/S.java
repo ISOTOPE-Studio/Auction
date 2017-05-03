@@ -6,6 +6,10 @@ import cc.isotopestudio.Auction.Auction;
 
 public class S {
 
+	public static String translate(String s) {
+		return ChatColor.translateAlternateColorCodes('&',s);
+	}
+
 	public static String toRed(String s) {
 		return String.valueOf(ChatColor.RED) + s;
 	}

@@ -1,7 +1,6 @@
 package cc.isotopestudio.Auction.gui;
 
 import cc.isotopestudio.Auction.Auction;
-import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
@@ -15,18 +14,18 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static cc.isotopestudio.Auction.Auction.playerPoints;
+import static cc.isotopestudio.Auction.Auction.plugin;
 
 public class MarketGUI extends GUI implements Listener {
 
-    public MarketGUI(Player player, int page, Plugin plugin) {
-        super(getName(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页")), 9 * 6, player, plugin);
+    public MarketGUI(Player player, int page) {
+        super(getName(S.toBoldDarkAqua("全球市场  第 " + (page + 1) + " 页")), 9 * 6, player);
         this.page = page;
         slotIDMap = new HashMap<>();
         setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
@@ -80,21 +79,15 @@ public class MarketGUI extends GUI implements Listener {
     private void onNextPage(OptionClickEvent e) {
         e.setWillClose(true);
         final Player player = e.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
-            public void run() {
-                (new MarketGUI(player, page + 1, CommandAuction.plugin)).open(player);
-            }
-        }, 2);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                () -> (new MarketGUI(player, page + 1)).open(player), 2);
     }
 
     private void onPreviousPage(OptionClickEvent e) {
         e.setWillClose(true);
         final Player player = e.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
-            public void run() {
-                (new MarketGUI(player, page - 1, CommandAuction.plugin)).open(e.getPlayer());
-            }
-        }, 2);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                () -> (new MarketGUI(player, page - 1)).open(e.getPlayer()), 2);
     }
 
     @SuppressWarnings("deprecation")

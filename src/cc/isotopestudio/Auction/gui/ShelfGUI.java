@@ -1,6 +1,5 @@
 package cc.isotopestudio.Auction.gui;
 
-import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.data.Data;
 import cc.isotopestudio.Auction.utli.DataLocationType;
 import cc.isotopestudio.Auction.utli.S;
@@ -14,21 +13,22 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static cc.isotopestudio.Auction.Auction.plugin;
+
 public class ShelfGUI extends GUI implements Listener {
 
-    public ShelfGUI(Player player, int page, Plugin plugin) {
-        super(getName(S.toBoldPurple("你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9, player, plugin);
+    public ShelfGUI(Player player, int page) {
+        super(getName(S.toBoldPurple("你的上架商品 ") + S.toGray(" 第 " + (page + 1) + " 页")), 9, player);
         this.page = page;
         slotIDMap = new HashMap<>();
         setOption(0, new ItemStack(Material.ARROW), S.toBoldGold("上一页"), S.toRed("第 " + (page + 1) + " 页"));
         setOption(8, new ItemStack(Material.ARROW), S.toBoldGold("下一页"), S.toRed("第 " + (page + 1) + " 页"));
-        int index = -1;
+        int index;
         int pos = 1;
         final int prerun = page * 7;
         ArrayList<Integer> indexList = Data.getResult(DataLocationType.MARKET, player, prerun, 7);
@@ -64,8 +64,8 @@ public class ShelfGUI extends GUI implements Listener {
 
     private int getTotalPage() {
         int size = Data.getItemSize(DataLocationType.MARKET, player);
-        int page = size / (7 * 1);
-        if (size % (7 * 1) != 0)
+        int page = size / (7);
+        if (size % (7) != 0)
             page++;
         return page;
     }
@@ -73,21 +73,15 @@ public class ShelfGUI extends GUI implements Listener {
     private void onNextPage(OptionClickEvent e) {
         e.setWillClose(true);
         final Player player = e.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
-            public void run() {
-                (new ShelfGUI(player, page + 1, CommandAuction.plugin)).open(player);
-            }
-        }, 2);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                () -> (new ShelfGUI(player, page + 1)).open(player), 2);
     }
 
     private void onPreviousPage(OptionClickEvent e) {
         e.setWillClose(true);
         final Player player = e.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CommandAuction.plugin, new Runnable() {
-            public void run() {
-                (new ShelfGUI(player, page - 1, CommandAuction.plugin)).open(player);
-            }
-        }, 2);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+                () -> (new ShelfGUI(player, page - 1)).open(player), 2);
     }
 
     private void onUnshelfItem(OptionClickEvent e, int slot) {
@@ -103,7 +97,7 @@ public class ShelfGUI extends GUI implements Listener {
         if (event.getInventory().getTitle().equals(name) && playerName.equals(event.getWhoClicked().getName())) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
-            OptionClickEvent e = null;
+            OptionClickEvent e;
             if (slot < 0) {
                 return;
             } else if (slot > 8) {
