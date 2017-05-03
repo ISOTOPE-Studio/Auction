@@ -6,7 +6,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public class SafeListener implements Listener {
 
@@ -19,7 +18,7 @@ public class SafeListener implements Listener {
 					event.getPlayer().setItemInHand(null);
 				}
 			}
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -36,7 +35,7 @@ public class SafeListener implements Listener {
 						inv.setItem(i, null);
 					}
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
 		}

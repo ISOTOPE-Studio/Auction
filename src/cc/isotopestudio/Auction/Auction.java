@@ -1,28 +1,28 @@
 package cc.isotopestudio.Auction;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.Statement;
-
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import net.milkbowl.vault.economy.Economy;
-
-import cc.isotopestudio.Auction.sql.SqlManager;
-import cc.isotopestudio.Auction.task.ClearOutdatedItem;
-import cc.isotopestudio.Auction.task.MailMsg;
 import cc.isotopestudio.Auction.command.CommandAuction;
 import cc.isotopestudio.Auction.listener.PlayerJoinMsg;
 import cc.isotopestudio.Auction.listener.SafeListener;
 import cc.isotopestudio.Auction.sql.MySQL;
+import cc.isotopestudio.Auction.sql.SqlManager;
+import cc.isotopestudio.Auction.task.ClearOutdatedItem;
+import cc.isotopestudio.Auction.task.MailMsg;
+import net.milkbowl.vault.economy.Economy;
+import org.black_ixx.playerpoints.PlayerPoints;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.Statement;
 
 public class Auction extends JavaPlugin {
 	public static final String prefix = (new StringBuilder()).append(ChatColor.GOLD).append(ChatColor.BOLD).append("[")
 			.append("拍卖").append("]").append(ChatColor.GREEN).toString();
-	public static final String pluginName = "Auction 1.2.4";
+	public static final String pluginName = "Auction 1.2.5";
 
 	// mySQL
 	public static MySQL MySQL;
@@ -32,9 +32,19 @@ public class Auction extends JavaPlugin {
 	// Vault
 	public static Economy econ = null;
 
-	public void createFile(String name) {
+
+	// APIs
+	public static PlayerPoints playerPoints;
+
+	private boolean hookPlayerPoints() {
+		final Plugin plugin = this.getServer().getPluginManager().getPlugin("PlayerPoints");
+		playerPoints = PlayerPoints.class.cast(plugin);
+		return playerPoints != null;
+	}
+
+	private void createFile() {
 		File file;
-		file = new File(getDataFolder(), name + ".yml");
+		file = new File(getDataFolder(), "config" + ".yml");
 		if (!file.exists()) {
 			saveDefaultConfig();
 		}
@@ -50,15 +60,21 @@ public class Auction extends JavaPlugin {
 			return;
 		}
 
+        if (!hookPlayerPoints()) {
+            getLogger().info("PlayerPoints 插件出错！");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
 		getLogger().info("加载配置文件中");
 
-		createFile("config");
-		if (SqlManager.connectMySQL(this) == false) {
+		createFile();
+		if (!SqlManager.connectMySQL(this)) {
 			getLogger().severe(pluginName + "无法加载!");
 			getLogger().severe("数据库无法连接！");
 			this.getPluginLoader().disablePlugin(this);
 		}
-		if (SqlManager.createTables(this) == false) {
+		if (!SqlManager.createTables(this)) {
 			getLogger().severe(pluginName + "无法加载!");
 			getLogger().severe("数据库创建失败！");
 			this.getPluginLoader().disablePlugin(this);
