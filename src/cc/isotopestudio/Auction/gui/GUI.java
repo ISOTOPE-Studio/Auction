@@ -67,7 +67,6 @@ public abstract class GUI implements Listener {
         isDestoryed = true;
         HandlerList.unregisterAll(this);
         handler = null;
-        plugin = null;
         optionNames = null;
         optionIcons = null;
     }

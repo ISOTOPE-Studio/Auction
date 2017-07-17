@@ -46,7 +46,7 @@ public class CommandAuction implements CommandExecutor {
                     return true;
                 }
                 try {
-                    ItemStack item = player.getItemInHand().clone();
+                    ItemStack item = player.getInventory().getItemInMainHand().clone();
                     if (Data.getItemSize(DataLocationType.MARKET, player) >= 20) {
                         player.sendMessage(S.toPrefixRed(
                                 "你已经上架了" + Data.getItemSize(DataLocationType.MARKET, player) + "个物品，不能再多了"));
@@ -72,7 +72,7 @@ public class CommandAuction implements CommandExecutor {
                         }
                         Data.storeItemIntoMarket(player.getName(), item, price);
                     }
-                    player.setItemInHand(null);
+                    player.getInventory().setItemInMainHand(null);
                     player.sendMessage(
                             S.toPrefixGreen("成功上架, " + "现在已经上架了" + Data.getItemSize(DataLocationType.MARKET, player))
                                     + "个物品");

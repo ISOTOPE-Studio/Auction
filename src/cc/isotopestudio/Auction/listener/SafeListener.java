@@ -11,11 +11,11 @@ public class SafeListener implements Listener {
 
 	@EventHandler
 	public void onClickItem(PlayerInteractEvent event) {
-		ItemStack item = event.getPlayer().getItemInHand();
+		ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
 		try {
 			for (String lore : item.getItemMeta().getLore()) {
 				if (lore.contains("Shift+ÓÒ¼ü") || lore.contains(" Ò³")) {
-					event.getPlayer().setItemInHand(null);
+					event.getPlayer().getInventory().setItemInMainHand(null);
 				}
 			}
 		} catch (Exception ignored) {
